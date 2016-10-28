@@ -1,0 +1,28 @@
+//! Native Rust crate for parsing and rendering into HTML the Textile markup language.
+//!
+//! # Installation
+//!
+//! Put this into `Cargo.toml`:
+//!
+//! ```toml
+//! [dependencies]
+//! textile = "*"
+//! ```
+//!
+//! # Usage
+//!
+//! ```rust
+//! extern crate textile;
+//!
+//! let html = textile::render("h1. *Header*");
+//! assert_eq!(html, "<h1><strong>Header</strong></h1>".to_string());
+//! ```
+
+#[macro_use]
+extern crate pipeline;
+extern crate regex;
+
+pub mod parser;
+mod renderer;
+
+pub use renderer::render;
