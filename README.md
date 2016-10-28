@@ -1,6 +1,6 @@
 # Textile
 
-Textile parser written in Rust.
+Native Rust crate for parsing and rendering into HTML the Textile markup language.
 
 ## Development Status
 + [ ] Block elements
