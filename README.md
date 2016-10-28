@@ -1,5 +1,7 @@
 # Textile
 
+[![Crate version](https://img.shields.io/crates/v/textile.svg)](https://crates.io/crates/textile)
+
 Native Rust crate for parsing and rendering into HTML the Textile markup language.
 
 ## Installation
