@@ -1,5 +1,6 @@
 # Textile
 
+[![Build Status](https://travis-ci.org/pavchip/textile-rs.svg?branch=master)](https://travis-ci.org/pavchip/textile-rs)
 [![Crate version](https://img.shields.io/crates/v/textile.svg)](https://crates.io/crates/textile)
 
 Native Rust crate for parsing and rendering into HTML the Textile markup language.
