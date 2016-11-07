@@ -5,6 +5,8 @@
 
 Native Rust crate for parsing and rendering into HTML the Textile markup language.
 
+[Documentation](https://docs.rs/textile/0.1.0/textile/)
+
 ## Installation
 
 Put this into `Cargo.toml`:
