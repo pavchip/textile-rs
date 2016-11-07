@@ -2,14 +2,18 @@ mod block;
 mod inline;
 
 use parser::block::parse_blocks;
+use std::collections::HashMap;
+
+pub type Attributes = HashMap<String, String>;
 
 /// Block element, e.g. header, paragraph or code block.
 #[derive(Debug, PartialEq)]
 pub enum Block {
     /// Header, e.g. `h3. Header`.
     Header {
-        elements: Vec<Inline>,
-        level: u8
+        attributes: Attributes,
+        level: u8,
+        elements: Vec<Inline>
     },
     /// Paragraph of inline elements.
     Paragraph(Vec<Inline>),
@@ -79,7 +83,7 @@ pub enum ItalicTagType {
 ///
 /// ```rust
 /// let text = "h1. _String with text_.";
-/// textile::parser::parse(text); // [Header { elements: [Italic([Text("String with text")], Emphasis), Text(".")], level: 1 }]
+/// textile::parser::parse(text); // [Header { attributes: {}, level: 1, elements: [Italic([Text("String with text")], Emphasis), Text(".")] }]
 /// ```
 pub fn parse(text: &str) -> Vec<Block> {
     parse_blocks(text)

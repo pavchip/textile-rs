@@ -1,4 +1,4 @@
-use parser::{Block, Inline, BoldTagType, ItalicTagType, parse};
+use parser::*;
 
 /// Renders Textile string into HTML string.
 ///
@@ -12,12 +12,26 @@ pub fn render(text: &str) -> String {
     render_blocks(parse(text))
 }
 
+fn render_attributes(attributes: &Attributes) -> String {
+     if !attributes.is_empty() {
+         let mut attrs = Vec::new();
+
+         for (key, value) in attributes {
+             attrs.push(format!("{}: {}", key, value));
+         }
+
+         format!(" style=\"{};\"", attrs.join("; "))
+     } else {
+         String::default()
+     }
+}
+
 fn render_blocks(elements: Vec<Block>) -> String {
     let mut res = String::new();
 
     for element in &elements {
         let html = match *element {
-            Block::Header {ref elements, level} => format!("<h{0}>{1}</h{0}>", level, render_inline_elements(elements)),
+            Block::Header {ref attributes, level, ref elements} => format!("<h{0}{1}>{2}</h{0}>", level, render_attributes(attributes), render_inline_elements(elements)),
             Block::Paragraph(ref elements) => format!("<p>{}</p>", render_inline_elements(elements)),
             Block::BlockQuotation(ref elements) => format!("<blockquote>{}</blockquote>", render_inline_elements(elements)),
             Block::Code(ref code) => format!("<pre><code>{}</code></pre>", code)
