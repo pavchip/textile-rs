@@ -29,21 +29,21 @@ pub fn parse_inline_elements(text: &str) -> Vec<Inline> {
 
     for (idx, line) in lines.iter().enumerate() {
         let mut tmp = String::new();
-        let mut i = 0;
+        let mut pos = 0;
 
-        while i < line.len() {
-            match parse_inline_element(&line[i..line.len()]) {
+        while pos < line.len() {
+            match parse_inline_element(&line[pos..line.len()]) {
                 Some((span, consumed_chars)) => {
                     if !tmp.is_empty() {
                         tokens.push(Inline::Text(tmp));
                     }
                     tokens.push(span);
                     tmp = String::new();
-                    i += consumed_chars;
+                    pos += consumed_chars;
                 }
                 None => {
-                    tmp.push_str(&line[i..i + 1]);
-                    i += 1;
+                    tmp.push_str(&line[pos..pos + 1]);
+                    pos += 1;
                 }
             }
         }
@@ -54,7 +54,6 @@ pub fn parse_inline_elements(text: &str) -> Vec<Inline> {
             tokens.push(Inline::Break);
         }
     }
-
     tokens
 }
 
