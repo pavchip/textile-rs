@@ -24,7 +24,7 @@ use parser::inline::link::parse_link;
 use parser::Inline;
 
 pub fn parse_inline_elements(text: &str) -> Vec<Inline> {
-    let lines = text.trim().lines().collect::<Vec<&str>>();
+    let lines = text.lines().collect::<Vec<&str>>();
     let mut tokens = Vec::new();
 
     for (idx, line) in lines.iter().enumerate() {

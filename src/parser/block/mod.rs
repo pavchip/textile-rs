@@ -11,7 +11,7 @@ use regex::Regex;
 
 pub fn parse_blocks(text: &str) -> Vec<Block> {
     let paragraph_pattern = Regex::new("\r{2,}|\n{2,}|(?:\r\n){2,}").unwrap();
-    let paragraphs = paragraph_pattern.split(&text).collect::<Vec<&str>>();
+    let paragraphs = paragraph_pattern.split(&text.trim()).collect::<Vec<&str>>();
     let mut tokens = Vec::new();
 
     for paragraph in &paragraphs {
