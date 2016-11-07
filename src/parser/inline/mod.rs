@@ -10,17 +10,17 @@ mod subscript;
 mod superscript;
 mod underlined;
 
-use parser::inline::abbreviation::parse_abbreviation;
-use parser::inline::bold::parse_bold_text;
-use parser::inline::italic::parse_italic_text;
-use parser::inline::strikethrough::parse_strikethrough_text;
-use parser::inline::underlined::parse_underlined_text;
-use parser::inline::subscript::parse_subscript_text;
-use parser::inline::superscript::parse_superscript_text;
-use parser::inline::code::parse_code;
-use parser::inline::citation::parse_citation;
-use parser::inline::image::parse_image;
-use parser::inline::link::parse_link;
+use self::abbreviation::parse_abbreviation;
+use self::bold::parse_bold_text;
+use self::italic::parse_italic_text;
+use self::strikethrough::parse_strikethrough_text;
+use self::underlined::parse_underlined_text;
+use self::subscript::parse_subscript_text;
+use self::superscript::parse_superscript_text;
+use self::code::parse_code;
+use self::citation::parse_citation;
+use self::image::parse_image;
+use self::link::parse_link;
 use parser::Inline;
 
 pub fn parse_inline_elements(text: &str) -> Vec<Inline> {

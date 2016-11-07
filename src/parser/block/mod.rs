@@ -3,10 +3,10 @@ mod header;
 mod code;
 mod paragraph;
 
-use parser::block::block_quotation::parse_block_quotation;
-use parser::block::header::parse_header;
-use parser::block::code::parse_code;
-use parser::block::paragraph::parse_paragraph;
+use self::block_quotation::parse_block_quotation;
+use self::header::parse_header;
+use self::code::parse_code;
+use self::paragraph::parse_paragraph;
 use parser::Block;
 use regex::Regex;
 
