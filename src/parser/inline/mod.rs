@@ -23,16 +23,8 @@ use parser::inline::image::parse_image;
 use parser::inline::link::parse_link;
 use parser::Inline;
 
-use regex::Regex;
-
 pub fn parse_inline_elements(text: &str) -> Vec<Inline> {
-    let text = match Regex::new("(?:\r|\n)$").unwrap().find(text) {
-        Some((start, _)) => &text[0..start],
-        None => text
-    };
-
-    let line_pattern = Regex::new("\r|\n|\r\n").unwrap();
-    let lines = line_pattern.split(&text).collect::<Vec<&str>>();
+    let lines = text.trim().lines().collect::<Vec<&str>>();
     let mut tokens = Vec::new();
 
     for (idx, line) in lines.iter().enumerate() {
