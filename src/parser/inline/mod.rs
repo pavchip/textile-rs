@@ -50,7 +50,7 @@ pub fn parse_inline_elements(text: &str) -> Vec<Inline> {
         if !tmp.is_empty() {
             tokens.push(Inline::Text(tmp));
         }
-        if idx > 0 && idx < lines.len() - 1 {
+        if idx < lines.len() - 1 {
             tokens.push(Inline::Break);
         }
     }
