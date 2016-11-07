@@ -16,7 +16,9 @@ pub enum Block {
         elements: Vec<Inline>
     },
     /// Paragraph of inline elements.
-    Paragraph(Vec<Inline>),
+    Paragraph {
+        elements: Vec<Inline>
+    },
     /// Block quotation, e.g. `bq. Some quote`.
     BlockQuotation(Vec<Inline>),
     /// Code block, e.g. `bc. print("Hello World")`.

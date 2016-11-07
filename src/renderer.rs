@@ -32,7 +32,7 @@ fn render_blocks(elements: Vec<Block>) -> String {
     for element in &elements {
         let html = match *element {
             Block::Header {ref attributes, level, ref elements} => format!("<h{0}{1}>{2}</h{0}>", level, render_attributes(attributes), render_inline_elements(elements)),
-            Block::Paragraph(ref elements) => format!("<p>{}</p>", render_inline_elements(elements)),
+            Block::Paragraph {ref elements} => format!("<p>{}</p>", render_inline_elements(elements)),
             Block::BlockQuotation(ref elements) => format!("<blockquote>{}</blockquote>", render_inline_elements(elements)),
             Block::Code(ref code) => format!("<pre><code>{}</code></pre>", code)
         };

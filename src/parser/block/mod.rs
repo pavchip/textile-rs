@@ -1,11 +1,12 @@
 mod block_quotation;
 mod header;
 mod code;
+mod paragraph;
 
 use parser::block::block_quotation::parse_block_quotation;
 use parser::block::header::parse_header;
 use parser::block::code::parse_code;
-use parser::inline::parse_inline_elements;
+use parser::block::paragraph::parse_paragraph;
 use parser::Block;
 use regex::Regex;
 
@@ -20,7 +21,7 @@ pub fn parse_blocks(text: &str) -> Vec<Block> {
                 tokens.push(block);
             }
             None => {
-                tokens.push(Block::Paragraph(parse_inline_elements(paragraph)));
+                tokens.push(parse_paragraph(paragraph));
             }
         }
     }
