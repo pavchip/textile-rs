@@ -24,26 +24,26 @@ use self::link::parse_link;
 use parser::Inline;
 
 pub fn parse_inline_elements(text: &str) -> Vec<Inline> {
-    let lines = text.lines().collect::<Vec<&str>>();
+    let lines: Vec<&str> = text.trim().lines().collect();
     let mut tokens = Vec::new();
 
     for (idx, line) in lines.iter().enumerate() {
         let mut tmp = String::new();
-        let mut pos = 0;
+        let mut cur_char = 0;
 
-        while pos < line.len() {
-            match parse_inline_element(&line[pos..line.len()]) {
+        while cur_char < line.len() {
+            match parse_inline_element(&line[cur_char..line.len()]) {
                 Some((span, consumed_chars)) => {
                     if !tmp.is_empty() {
                         tokens.push(Inline::Text(tmp));
                     }
                     tokens.push(span);
                     tmp = String::new();
-                    pos += consumed_chars;
+                    cur_char += consumed_chars;
                 }
                 None => {
-                    tmp.push_str(&line[pos..pos + 1]);
-                    pos += 1;
+                    tmp.push_str(&line[cur_char..cur_char + 1]);
+                    cur_char += 1;
                 }
             }
         }
@@ -60,6 +60,7 @@ pub fn parse_inline_elements(text: &str) -> Vec<Inline> {
 fn parse_inline_element(text: &str) -> Option<(Inline, usize)> {
     pipe_opt!(
         text
+        // => parse_break
         => parse_bold_text
         => parse_italic_text
         => parse_strikethrough_text

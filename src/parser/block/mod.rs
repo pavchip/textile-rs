@@ -8,31 +8,27 @@ use self::header::parse_header;
 use self::code::parse_code;
 use self::paragraph::parse_paragraph;
 use parser::Block;
-use regex::Regex;
 
 pub fn parse_blocks(text: &str) -> Vec<Block> {
-    let paragraph_pattern = Regex::new("\r{2,}|\n{2,}|(?:\r\n){2,}").unwrap();
-    let paragraphs = paragraph_pattern.split(&text.trim()).collect::<Vec<&str>>();
-    let mut tokens = Vec::new();
+    let mut blocks = Vec::new();
+    let lines: Vec<&str> = text.lines().collect();
+    let mut cur_line = 0;
 
-    for paragraph in &paragraphs {
-        match parse_block(paragraph) {
-            Some(block) => {
-                tokens.push(block);
-            }
-            None => {
-                tokens.push(parse_paragraph(paragraph));
-            }
+    while cur_line < lines.len() {
+        if let Some((block, consumed_lines)) = parse_block(&lines[cur_line..lines.len()]) {
+            blocks.push(block);
+            cur_line += consumed_lines;
         }
     }
-    tokens
+    blocks
 }
 
-fn parse_block(text: &str) -> Option<Block> {
+fn parse_block(lines: &[&str]) -> Option<(Block, usize)> {
     pipe_opt!(
-        text
+        lines
         => parse_header
         => parse_code
         => parse_block_quotation
+        => parse_paragraph
     )
 }
