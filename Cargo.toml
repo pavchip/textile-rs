@@ -6,6 +6,7 @@ license = "MIT"
 readme = "README.md"
 repository = "https://github.com/pavchip/textile-rs"
 homepage = "https://github.com/pavchip/textile-rs"
+documentation = "https://docs.rs/textile/0.1.0/textile/"
 description = "Native Rust crate for parsing and rendering into HTML the Textile markup language"
 
 [dependencies]
