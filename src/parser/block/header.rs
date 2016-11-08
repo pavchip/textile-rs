@@ -4,13 +4,12 @@ use regex::Regex;
 use std::collections::HashMap;
 
 pub fn parse_header(lines: &[&str]) -> Option<(Block, usize)> {
-    let pattern = Regex::new(r"h(?P<level>[1-6])(?P<text_align>[>=]?)\. (?P<text>.*)").unwrap();
+    let pattern = Regex::new(r"h(?P<level>[1-6])(?P<text_align>[>=]?)\. ").unwrap();
     let mut strings = Vec::new();
     let mut cur_line = 1;
 
     if pattern.is_match(lines[0]) {
         let caps = pattern.captures(lines[0]).unwrap();
-        let text = caps.name("text").unwrap().to_string();
         let level = caps.name("level").unwrap().parse::<u8>().unwrap();
         let text_align = match caps.name("text_align").unwrap() {
             "=" => "center",
@@ -19,7 +18,7 @@ pub fn parse_header(lines: &[&str]) -> Option<(Block, usize)> {
         }.to_string();
         let mut attrs = HashMap::<String, String>::new();
 
-        strings.push(text);
+        strings.push((&lines[0][caps.at(0).unwrap().len()..]).to_string());
 
         for line in &lines[1..] {
             cur_line += 1;
