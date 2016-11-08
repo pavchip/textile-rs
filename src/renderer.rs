@@ -41,7 +41,7 @@ fn render_blocks(elements: Vec<Block>) -> String {
     res
 }
 
-fn render_inline_elements(elements: &Vec<Inline>) -> String {
+fn render_inline_elements(elements: &[Inline]) -> String {
     let mut res = String::new();
 
     for element in elements {
