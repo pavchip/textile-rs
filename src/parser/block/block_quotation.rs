@@ -41,7 +41,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parsers_block_quotation_correctly() {
+    fn parses_block_quotation_correctly() {
         assert_eq!(
             parse_block_quotation(&vec!["bq. *My quote*"]),
             Some((

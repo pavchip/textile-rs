@@ -40,7 +40,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parsers_code_correctly() {
+    fn parses_code_correctly() {
         assert_eq!(
             parse_code_block(&vec!["bc. print('Hello World')", "print(10 * 4)"]),
             Some((
