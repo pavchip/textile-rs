@@ -6,10 +6,10 @@ use std::collections::HashMap;
 
 pub type Attributes = HashMap<String, String>;
 
-/// Block element, e.g. header, paragraph or code block.
+/// Block element, e.g. heading, paragraph or code block.
 #[derive(Debug, PartialEq)]
 pub enum Block {
-    /// Heading, e.g. `h3. Header`.
+    /// Heading, e.g. `h3. Some text`.
     Heading {
         attributes: Attributes,
         level: u8,

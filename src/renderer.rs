@@ -5,8 +5,8 @@ use parser::*;
 /// # Example
 ///
 /// ```rust
-/// let html = textile::render("h2. *Header of level 2*");
-/// assert_eq!(html, "<h2><strong>Header of level 2</strong></h2>".to_string());
+/// let html = textile::render("h2. *Heading of level 2*");
+/// assert_eq!(html, "<h2><strong>Heading of level 2</strong></h2>".to_string());
 /// ```
 pub fn render(text: &str) -> String {
     render_blocks(parse(text))
