@@ -1,6 +1,6 @@
 use parser::Block;
 
-pub fn parse_code(lines: &[&str]) -> Option<(Block, usize)> {
+pub fn parse_code_block(lines: &[&str]) -> Option<(Block, usize)> {
     let pos = lines.iter().position(|el| !el.is_empty());
     let mut cur_line = match pos {
         Some(value) => {
@@ -28,7 +28,7 @@ pub fn parse_code(lines: &[&str]) -> Option<(Block, usize)> {
             strings.push(line.to_string());
         }
 
-        Some((Block::Code(strings.join("\n")), cur_line))
+        Some((Block::CodeBlock(strings.join("\n")), cur_line))
     } else {
         None
     }
@@ -42,9 +42,9 @@ mod tests {
     #[test]
     fn parsers_code_correctly() {
         assert_eq!(
-            parse_code(&vec!["bc. print('Hello World')", "print(10 * 4)"]),
+            parse_code_block(&vec!["bc. print('Hello World')", "print(10 * 4)"]),
             Some((
-                Block::Code("print('Hello World')\nprint(10 * 4)".to_string()),
+                Block::CodeBlock("print('Hello World')\nprint(10 * 4)".to_string()),
                 2
             ))
         );

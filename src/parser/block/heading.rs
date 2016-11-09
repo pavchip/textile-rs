@@ -3,7 +3,7 @@ use parser::Block;
 use regex::Regex;
 use std::collections::HashMap;
 
-pub fn parse_header(lines: &[&str]) -> Option<(Block, usize)> {
+pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
     let pattern = Regex::new(r"h(?P<level>[1-6])(?P<text_align>[>=]?)\. ").unwrap();
     let pos = lines.iter().position(|el| !el.is_empty());
     let mut cur_line = match pos {
@@ -46,7 +46,7 @@ pub fn parse_header(lines: &[&str]) -> Option<(Block, usize)> {
         }
 
         Some((
-            Block::Header {
+            Block::Heading {
                 attributes: attrs,
                 level: level,
                 elements: parse_inline_elements(&*strings.join("\n"))
@@ -64,11 +64,11 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parsers_header_correctly() {
+    fn parses_heading_correctly() {
         assert_eq!(
-            parse_header(&vec!["h2. *Bold text* _Italic text_"]),
+            parse_heading(&vec!["h2. *Bold text* _Italic text_"]),
             Some((
-                Block::Header {
+                Block::Heading {
                     attributes: Attributes::default(),
                     level: 2,
                     elements: vec![

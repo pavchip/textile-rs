@@ -9,8 +9,8 @@ pub type Attributes = HashMap<String, String>;
 /// Block element, e.g. header, paragraph or code block.
 #[derive(Debug, PartialEq)]
 pub enum Block {
-    /// Header, e.g. `h3. Header`.
-    Header {
+    /// Heading, e.g. `h3. Header`.
+    Heading {
         attributes: Attributes,
         level: u8,
         elements: Vec<Inline>
@@ -22,7 +22,7 @@ pub enum Block {
     /// Block quotation, e.g. `bq. Some quote`.
     BlockQuotation(Vec<Inline>),
     /// Code block, e.g. `bc. print("Hello World")`.
-    Code(String),
+    CodeBlock(String),
 }
 
 /// Inline element, e.g. bold text, link or image.
@@ -85,7 +85,7 @@ pub enum ItalicTagType {
 ///
 /// ```rust
 /// let text = "h1. _String with text_.";
-/// textile::parser::parse(text); // [Header { attributes: {}, level: 1, elements: [Italic([Text("String with text")], Emphasis), Text(".")] }]
+/// textile::parser::parse(text); // [Heading { attributes: {}, level: 1, elements: [Italic([Text("String with text")], Emphasis), Text(".")] }]
 /// ```
 pub fn parse(text: &str) -> Vec<Block> {
     parse_blocks(text)
