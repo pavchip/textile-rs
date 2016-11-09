@@ -4,8 +4,21 @@ use regex::Regex;
 
 pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
     let pattern = Regex::new("(?:p\\. )?").unwrap();
+    let pos = lines.iter().position(|el| !el.is_empty());
+    let mut cur_line = match pos {
+        Some(value) => {
+            match value {
+                0 => 1,
+                _ => value + 1
+            }
+        }
+        None => 1
+    };
+    let lines = match pos {
+        Some(value) => &lines[value..],
+        None => lines
+    };
     let mut strings = Vec::new();
-    let mut cur_line = 1;
 
     if pattern.is_match(lines[0]) {
         let caps = pattern.captures(lines[0]).unwrap();
