@@ -21,15 +21,15 @@ textile = "0.1.0"
 ```rust
 extern crate textile;
 
-let html = textile::render("h1. *Header*");
-assert_eq!(html, "<h1><strong>Header</strong></h1>".to_string());
+let html = textile::render("h1. *Textile markup language*");
+assert_eq!(html, "<h1><strong>Textile markup language</strong></h1>".to_string());
 ```
 
 ## Development Status
 + [ ] Block elements
   + [x] Block quotation
   + [x] Code block
-  + [x] Header
+  + [x] Heading
   + [ ] Raw HTML
   + [ ] Comments
   + [ ] Pre-formatted text
