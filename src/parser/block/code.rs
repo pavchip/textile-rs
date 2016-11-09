@@ -1,8 +1,21 @@
 use parser::Block;
 
 pub fn parse_code(lines: &[&str]) -> Option<(Block, usize)> {
+    let pos = lines.iter().position(|el| !el.is_empty());
+    let mut cur_line = match pos {
+        Some(value) => {
+            match value {
+                0 => 1,
+                _ => value + 1
+            }
+        }
+        None => 1
+    };
+    let lines = match pos {
+        Some(value) => &lines[value..],
+        None => lines
+    };
     let mut strings = Vec::new();
-    let mut cur_line = 1;
 
     if lines[0].starts_with("bc. ") {
         strings.push((&lines[0][4..]).to_string());
