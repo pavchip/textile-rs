@@ -12,15 +12,15 @@ pub fn render(text: &str) -> String {
     render_blocks(parse(text))
 }
 
-fn render_attributes(attributes: &Attributes) -> String {
-     if !attributes.is_empty() {
-         let mut attrs = Vec::new();
+fn render_properties(properties: &Properties) -> String {
+     if !properties.is_empty() {
+         let mut props = Vec::new();
 
-         for (key, value) in attributes {
-             attrs.push(format!("{}: {}", key, value));
+         for (key, value) in properties {
+             props.push(format!("{}: {}", key, value));
          }
 
-         format!(" style=\"{};\"", attrs.join("; "))
+         format!(" style=\"{};\"", props.join("; "))
      } else {
          String::default()
      }
@@ -31,7 +31,7 @@ fn render_blocks(elements: Vec<Block>) -> String {
 
     for element in &elements {
         let html = match *element {
-            Block::Heading {ref attributes, level, ref elements} => format!("<h{0}{1}>{2}</h{0}>", level, render_attributes(attributes), render_inline_elements(elements)),
+            Block::Heading {ref properties, level, ref elements} => format!("<h{0}{1}>{2}</h{0}>", level, render_properties(properties), render_inline_elements(elements)),
             Block::Paragraph {ref elements} => format!("<p>{}</p>", render_inline_elements(elements)),
             Block::BlockQuotation(ref elements) => format!("<blockquote>{}</blockquote>", render_inline_elements(elements)),
             Block::CodeBlock(ref code) => format!("<pre><code>{}</code></pre>", code)

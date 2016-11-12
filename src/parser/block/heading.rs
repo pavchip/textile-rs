@@ -1,7 +1,6 @@
 use parser::inline::parse_inline_elements;
-use parser::Block;
+use parser::{Block, Properties};
 use regex::Regex;
-use std::collections::HashMap;
 
 pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
     let pattern = Regex::new(r"h(?P<level>[1-6])(?P<text_align>[>=]?)\. ").unwrap();
@@ -29,7 +28,7 @@ pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
             ">" => "right",
             _ => "",
         }.to_string();
-        let mut attrs = HashMap::<String, String>::new();
+        let mut props = Properties::new();
 
         strings.push((&lines[0][caps.at(0).unwrap().len()..]).to_string());
 
@@ -42,12 +41,12 @@ pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
         }
 
         if !text_align.is_empty() {
-            attrs.insert("text-align".to_string(), text_align);
+            props.insert("text-align".to_string(), text_align);
         }
 
         Some((
             Block::Heading {
-                attributes: attrs,
+                properties: props,
                 level: level,
                 elements: parse_inline_elements(&*strings.join("\n"))
             },
@@ -60,7 +59,7 @@ pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Block, Inline, BoldTagType, ItalicTagType, Attributes};
+    use parser::{Block, Inline, BoldTagType, ItalicTagType, Properties};
     use super::*;
 
     #[test]
@@ -69,8 +68,8 @@ mod tests {
             parse_heading(&vec!["h2. *Bold text* _Italic text_"]),
             Some((
                 Block::Heading {
-                    attributes: Attributes::default(),
                     level: 2,
+                    properties: Properties::default(),
                     elements: vec![
                         Inline::Bold(
                             vec![

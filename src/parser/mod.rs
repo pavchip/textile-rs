@@ -4,15 +4,15 @@ mod inline;
 use parser::block::parse_blocks;
 use std::collections::HashMap;
 
-pub type Attributes = HashMap<String, String>;
+pub type Properties = HashMap<String, String>;
 
 /// Block element, e.g. heading, paragraph or code block.
 #[derive(Debug, PartialEq)]
 pub enum Block {
     /// Heading, e.g. `h3. Some text`.
     Heading {
-        attributes: Attributes,
         level: u8,
+        properties: Properties,
         elements: Vec<Inline>
     },
     /// Paragraph of inline elements.
