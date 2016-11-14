@@ -93,7 +93,7 @@ pub enum Inline {
     /// Image, e.g. `!http://example.com/image.jpg(Image)!`.
     Image {
         attributes: Attributes,
-        alt: Option<String>,
+        alt: String,
         url: String,
     },
 }

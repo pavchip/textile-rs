@@ -84,8 +84,13 @@ fn render_inline_elements(elements: &[Inline]) -> String {
             Inline::Citation {ref attributes, ref elements} => format!("<cite{}>{}</cite>", render_attributes(attributes), render_inline_elements(elements)),
             Inline::Abbreviation {ref abbr, ref transcript} => format!("<acronym title=\"{}\"><span>{}</span></acronym>", transcript, abbr),
             Inline::Link {ref attributes, ref description, ref url} => format!("<a href=\"{}\"{}>{}</a>", url, render_attributes(attributes), render_inline_elements(description)),
-            Inline::Image {ref attributes, ref url, alt: Some(ref text)} => format!("<img src=\"{}\" alt=\"{}\"{}>", url, text, render_attributes(attributes)),
-            Inline::Image {ref attributes, ref url, alt: None} => format!("<img src=\"{}\"{}>", url, render_attributes(attributes)),
+            Inline::Image {ref attributes, ref alt, ref url} => {
+                if !alt.is_empty() {
+                    format!("<img src=\"{0}\" alt=\"{1}\" title=\"{1}\"{2}>", url, alt, render_attributes(attributes))
+                } else {
+                    format!("<img src=\"{}\"{}>", url, render_attributes(attributes))
+                }
+            },
         };
         res.push_str(&html);
     }

@@ -19,9 +19,9 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
         let url_alt_pattern_caps = url_alt_pattern.captures(&*text).unwrap();
         let url = url_alt_pattern_caps.name("url").unwrap().to_string();
         let alt = match url_alt_pattern_caps.name("alt") {
-            Some(alt_text) => Some(alt_text.to_string()),
-            None => None,
-        };
+            Some(alt_text) => alt_text,
+            None => "",
+        }.to_string();
 
         if !align.is_empty() {
             attrs.push(Attribute::Align(align));
@@ -52,7 +52,7 @@ mod tests {
             Some((
                 Inline::Image {
                     attributes: Attributes::new(),
-                    alt: Some("Example image".to_string()),
+                    alt: "Example image".to_string(),
                     url: "http://example.com".to_string(),
                 },
                 35
@@ -67,7 +67,7 @@ mod tests {
             Some((
                 Inline::Image {
                     attributes: Attributes::new(),
-                    alt: None,
+                    alt: "".to_string(),
                     url: "http://example.com".to_string(),
                 },
                 20
