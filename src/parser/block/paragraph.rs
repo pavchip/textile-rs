@@ -23,6 +23,10 @@ pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
 
     if pattern.is_match(lines[0]) {
         let caps = pattern.captures(lines[0]).unwrap();
+        let attributes = match caps.name("attributes") {
+            Some(string) => string,
+            None => "",
+        };
 
         strings.push((&lines[0][caps.at(0).unwrap().len()..]).to_string());
 
@@ -36,7 +40,7 @@ pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
 
         Some((
             Block::Paragraph {
-                attributes: parse_block_attributes(caps.name("attributes").unwrap()),
+                attributes: parse_block_attributes(attributes),
                 elements: parse_inline_elements(&*strings.join("\n"))
             },
             cur_line
