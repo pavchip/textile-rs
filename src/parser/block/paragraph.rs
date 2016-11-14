@@ -41,7 +41,8 @@ pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
         Some((
             Block::Paragraph {
                 attributes: parse_block_attributes(attributes),
-                elements: parse_inline_elements(&*strings.join("\n"))
+                elements: parse_inline_elements(&*strings.join("\n")),
+                starts_with_p: pattern.find(&lines[0]).unwrap().1 != 0
             },
             cur_line
         ))

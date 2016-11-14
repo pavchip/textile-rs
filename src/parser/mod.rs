@@ -20,6 +20,7 @@ pub enum Block {
     Paragraph {
         attributes: Attributes,
         elements: Vec<Inline>,
+        starts_with_p: bool,
     },
     /// Block quotation, e.g. `bq. Some quote`.
     BlockQuotation {
