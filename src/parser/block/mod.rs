@@ -23,7 +23,7 @@ pub fn parse_blocks(text: &str) -> Vec<Block> {
     blocks
 }
 
-fn parse_block(lines: &[&str]) -> Option<(Block, usize)> {
+pub fn parse_block(lines: &[&str]) -> Option<(Block, usize)> {
     pipe_opt!(
         lines
         => parse_block_quotation

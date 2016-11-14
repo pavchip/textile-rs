@@ -1,10 +1,11 @@
 use parser::Block;
+use parser::block::parse_block;
 use parser::inline::parse_inline_elements;
 use parser::utils::parse_block_attributes;
 use regex::Regex;
 
 pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
-    let pattern = Regex::new("bq(?P<attributes>.*)\\. ").unwrap();
+    let pattern = Regex::new("bq(?P<attributes>.*?)(?P<mode>\\.{1,2}) ").unwrap();
     let pos = lines.iter().position(|el| !el.is_empty());
     let mut cur_line = match pos {
         Some(value) => {
@@ -25,12 +26,34 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
         let caps = pattern.captures(lines[0]).unwrap();
         strings.push((&lines[0][caps.at(0).unwrap().len()..]).to_string());
 
-        for line in &lines[1..] {
-            cur_line += 1;
-            if line.is_empty() {
-                break;
+        if caps.name("mode").unwrap().len() == 1 {
+            // Breaks parsing if line is empty.
+            for line in &lines[1..] {
+                cur_line += 1;
+                if line.is_empty() {
+                    break;
+                }
+                strings.push(line.to_string());
             }
-            strings.push(line.to_string());
+        } else {
+            // Breaks parsing if line is block element.
+            for line in &lines[1..] {
+                cur_line += 1;
+                match parse_block(&[line]) {
+                    Some((Block::Paragraph {starts_with_p, ..}, _)) => {
+                        if starts_with_p {
+                            cur_line -= 1;
+                            break;
+                        }
+                    },
+                    Some(_) => {
+                        cur_line -= 1;
+                        break;
+                    },
+                    _ => {},
+                }
+                strings.push(line.to_string());
+            }
         }
 
         Some((
