@@ -1,9 +1,10 @@
+use parser::Block;
 use parser::inline::parse_inline_elements;
-use parser::{Block, Properties};
+use parser::utils::parse_block_attributes;
 use regex::Regex;
 
 pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
-    let pattern = Regex::new(r"h(?P<level>[1-6])(?P<text_align>[>=]?)\. ").unwrap();
+    let pattern = Regex::new("h(?P<level>[1-6])(?P<attributes>.*)\\. ").unwrap();
     let pos = lines.iter().position(|el| !el.is_empty());
     let mut cur_line = match pos {
         Some(value) => {
@@ -22,13 +23,7 @@ pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
 
     if pattern.is_match(lines[0]) {
         let caps = pattern.captures(lines[0]).unwrap();
-        let level = caps.name("level").unwrap().parse::<u8>().unwrap();
-        let text_align = match caps.name("text_align").unwrap() {
-            "=" => "center",
-            ">" => "right",
-            _ => "",
-        }.to_string();
-        let mut props = Properties::new();
+        let level: u8 = caps.name("level").unwrap().parse().unwrap();
 
         strings.push((&lines[0][caps.at(0).unwrap().len()..]).to_string());
 
@@ -40,15 +35,11 @@ pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
             strings.push(line.to_string());
         }
 
-        if !text_align.is_empty() {
-            props.insert("text-align".to_string(), text_align);
-        }
-
         Some((
             Block::Heading {
-                properties: props,
+                attributes: parse_block_attributes(caps.name("attributes").unwrap()),
                 level: level,
-                elements: parse_inline_elements(&*strings.join("\n"))
+                elements: parse_inline_elements(&*strings.join("\n")),
             },
             cur_line
         ))
@@ -59,7 +50,7 @@ pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Block, Inline, BoldTagType, ItalicTagType, Properties};
+    use parser::{Attributes, Block, Inline, BoldTagType, ItalicTagType};
     use super::*;
 
     #[test]
@@ -68,22 +59,24 @@ mod tests {
             parse_heading(&vec!["h2. *Bold text* _Italic text_"]),
             Some((
                 Block::Heading {
+                    attributes: Attributes::new(),
                     level: 2,
-                    properties: Properties::default(),
                     elements: vec![
-                        Inline::Bold(
-                            vec![
+                        Inline::Bold {
+                            attributes: Attributes::new(),
+                            elements: vec![
                                 Inline::Text("Bold text".to_string())
                             ],
-                            BoldTagType::Strong
-                        ),
+                            tag_type: BoldTagType::Strong,
+                        },
                         Inline::Text(" ".to_string()),
-                        Inline::Italic(
-                            vec![
+                        Inline::Italic {
+                            attributes: Attributes::new(),
+                            elements: vec![
                                 Inline::Text("Italic text".to_string())
                             ],
-                            ItalicTagType::Emphasis
-                        )
+                            tag_type: ItalicTagType::Emphasis,
+                        },
                     ]
                 },
                 1

@@ -1,28 +1,36 @@
 mod block;
 mod inline;
+mod utils;
 
 use parser::block::parse_blocks;
 use std::collections::HashMap;
 
-pub type Properties = HashMap<String, String>;
+pub type Attributes = Vec<Attribute>;
 
 /// Block element, e.g. heading, paragraph or code block.
 #[derive(Debug, PartialEq)]
 pub enum Block {
     /// Heading, e.g. `h3. Some text`.
     Heading {
+        attributes: Attributes,
+        elements: Vec<Inline>,
         level: u8,
-        properties: Properties,
-        elements: Vec<Inline>
     },
     /// Paragraph of inline elements.
     Paragraph {
-        elements: Vec<Inline>
+        attributes: Attributes,
+        elements: Vec<Inline>,
     },
     /// Block quotation, e.g. `bq. Some quote`.
-    BlockQuotation(Vec<Inline>),
+    BlockQuotation {
+        attributes: Attributes,
+        elements: Vec<Inline>,
+    },
     /// Code block, e.g. `bc. print("Hello World")`.
-    CodeBlock(String),
+    CodeBlock {
+        attributes: Attributes,
+        code: String,
+    },
 }
 
 /// Inline element, e.g. bold text, link or image.
@@ -32,37 +40,62 @@ pub enum Inline {
     Break,
     /// String with text.
     Text(String),
-    /// Bold text, e.g. `*Text*` or `**Text**`.
-    Bold(Vec<Inline>, BoldTagType),
-    /// Italic text, e.g. `_Text_` or `__Text__`.
-    Italic(Vec<Inline>, ItalicTagType),
-    /// Strikethrough text, e.g. `-Text-`.
-    Strikethrough(Vec<Inline>),
-    /// Underlined text, e.g. `+Text+`.
-    Underlined(Vec<Inline>),
-    /// Subscript text, e.g. `~Text~`.
-    Subscript(Vec<Inline>),
-    /// Superscript text, e.g. `^Text^`.
-    Superscript(Vec<Inline>),
     /// Code, e.g. `@puts "Hello world!"@`.
     Code(String),
+    /// Bold text, e.g. `*Text*` or `**Text**`.
+    Bold {
+        attributes: Attributes,
+        elements: Vec<Inline>,
+        tag_type: BoldTagType,
+    },
+    /// Italic text, e.g. `_Text_` or `__Text__`.
+    Italic {
+        attributes: Attributes,
+        tag_type: ItalicTagType,
+        elements: Vec<Inline>,
+    },
+    /// Strikethrough text, e.g. `-Text-`.
+    Strikethrough {
+        attributes: Attributes,
+        elements: Vec<Inline>,
+    },
+    /// Underlined text, e.g. `+Text+`.
+    Underlined {
+        attributes: Attributes,
+        elements: Vec<Inline>,
+    },
+    /// Subscript text, e.g. `~Text~`.
+    Subscript {
+        attributes: Attributes,
+        elements: Vec<Inline>,
+    },
+    /// Superscript text, e.g. `^Text^`.
+    Superscript {
+        attributes: Attributes,
+        elements: Vec<Inline>,
+    },
     /// Citation, e.g. `??Some citation??`.
-    Citation(Vec<Inline>),
+    Citation {
+        attributes: Attributes,
+        elements: Vec<Inline>,
+    },
     /// Abbreviation, e.g. `ABBR(Abbreviation)`.
     Abbreviation {
         abbr: String,
-        transcript: String
+        transcript: String,
     },
     /// Link, e.g. `"Link":http://example.com`.
     Link {
+        attributes: Attributes,
         description: Vec<Inline>,
-        url: String
+        url: String,
     },
     /// Image, e.g. `!http://example.com/image.jpg(Image)!`.
     Image {
+        attributes: Attributes,
         alt: Option<String>,
-        url: String
-    }
+        url: String,
+    },
 }
 
 /// Tag type for bold text, e.g. `<b>` or `<strong>`.
@@ -77,6 +110,15 @@ pub enum BoldTagType {
 pub enum ItalicTagType {
     Emphasis,
     Italic,
+}
+
+#[derive(Debug, PartialEq)]
+pub enum Attribute {
+    Align(String),
+    Class(Vec<String>),
+    Id(String),
+    Language(String),
+    Style(HashMap<String, String>)
 }
 
 /// Splits text into tokens. Returns vector of block elements.

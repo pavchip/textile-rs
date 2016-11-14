@@ -1,13 +1,15 @@
-use parser::inline::parse_inline_elements;
 use parser::{Inline, ItalicTagType};
+use parser::inline::parse_inline_elements;
+use parser::utils::parse_inline_attributes;
 use regex::Regex;
 
 pub fn parse_italic_text(text: &str) -> Option<(Inline, usize)> {
-    let pattern = Regex::new("^(?P<count1>_+)(?P<text>.+?)(?P<count2>_+)").unwrap();
+    let pattern = Regex::new("^(?P<count1>_+)(?P<string>.+?)(?P<count2>_+)").unwrap();
 
     if pattern.is_match(text) {
         let caps = pattern.captures(text).unwrap();
-        let content = caps.name("text").unwrap();
+        let group_0 = caps.at(0).unwrap();
+        let (attrs, text) = parse_inline_attributes(caps.name("string").unwrap());
         let count1 = caps.name("count1").unwrap().len();
         let count2 = caps.name("count2").unwrap().len();
 
@@ -17,11 +19,16 @@ pub fn parse_italic_text(text: &str) -> Option<(Inline, usize)> {
             } else {
                 ItalicTagType::Italic
             };
-            Some((Inline::Italic(parse_inline_elements(content), tag_type),
-                  content.len() + count1 * 2))
+            Some((
+                Inline::Italic {
+                    attributes: attrs,
+                    elements: parse_inline_elements(&*text),
+                    tag_type: tag_type,
+                },
+                group_0.len()
+            ))
         } else {
-            let text = caps.at(0).unwrap();
-            Some((Inline::Text(text.to_string()), text.len()))
+            Some((Inline::Text(group_0.to_string()), group_0.len()))
         }
     } else {
         None
@@ -30,28 +37,36 @@ pub fn parse_italic_text(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Inline, ItalicTagType};
+    use parser::{Attributes, Inline, ItalicTagType};
     use super::*;
 
     #[test]
     fn parses_italic_text_correctly() {
         assert_eq!(
             parse_italic_text("_Emphasis text_"),
-            Some((Inline::Italic(
-                vec![
-                    Inline::Text("Emphasis text".to_string())
-                ],
-                ItalicTagType::Emphasis
-            ), 15))
+            Some((
+                Inline::Italic {
+                    attributes: Attributes::new(),
+                    elements: vec![
+                        Inline::Text("Emphasis text".to_string())
+                    ],
+                    tag_type: ItalicTagType::Emphasis,
+                },
+                15
+            ))
         );
         assert_eq!(
             parse_italic_text("__Italic text__"),
-            Some((Inline::Italic(
-                vec![
-                    Inline::Text("Italic text".to_string())
-                ],
-                ItalicTagType::Italic
-            ), 15))
+            Some((
+                Inline::Italic {
+                    attributes: Attributes::new(),
+                    elements: vec![
+                        Inline::Text("Italic text".to_string())
+                    ],
+                    tag_type: ItalicTagType::Italic,
+                },
+                15
+            ))
         );
     }
 }

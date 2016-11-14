@@ -1,9 +1,10 @@
 use parser::Block;
 use parser::inline::parse_inline_elements;
+use parser::utils::*;
 use regex::Regex;
 
 pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
-    let pattern = Regex::new("(?:p\\. )?").unwrap();
+    let pattern = Regex::new("(?:p(?P<attributes>.*)\\. )?").unwrap();
     let pos = lines.iter().position(|el| !el.is_empty());
     let mut cur_line = match pos {
         Some(value) => {
@@ -33,8 +34,9 @@ pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
             strings.push(line.to_string());
         }
 
-        Some(
-            (Block::Paragraph {
+        Some((
+            Block::Paragraph {
+                attributes: parse_block_attributes(caps.name("attributes").unwrap()),
                 elements: parse_inline_elements(&*strings.join("\n"))
             },
             cur_line

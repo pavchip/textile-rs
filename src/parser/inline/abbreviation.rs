@@ -6,13 +6,16 @@ pub fn parse_abbreviation(text: &str) -> Option<(Inline, usize)> {
 
     if pattern.is_match(text) {
         let caps = pattern.captures(text).unwrap();
-        let abbreviation = caps.name("abbreviation").unwrap();
-        let transcript = caps.name("transcript").unwrap();
+        let abbreviation = caps.name("abbreviation").unwrap().to_string();
+        let transcript = caps.name("transcript").unwrap().to_string();
 
-        Some((Inline::Abbreviation {
-            abbr: abbreviation.to_string(),
-            transcript: transcript.to_string()
-        }, abbreviation.len() + transcript.len() + 2))
+        Some((
+            Inline::Abbreviation {
+                abbr: abbreviation,
+                transcript: transcript
+            },
+            caps.at(0).unwrap().len()
+        ))
     } else {
         None
     }
@@ -27,10 +30,13 @@ mod tests {
     fn parses_abbreviation_correctly() {
         assert_eq!(
             parse_abbreviation("ABBR(Abbreviation)"),
-            Some((Inline::Abbreviation {
-                abbr: "ABBR".to_string(),
-                transcript: "Abbreviation".to_string()
-            }, 18))
+            Some((
+                Inline::Abbreviation {
+                    abbr: "ABBR".to_string(),
+                    transcript: "Abbreviation".to_string()
+                },
+                18
+            ))
         );
     }
 

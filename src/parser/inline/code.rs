@@ -2,13 +2,13 @@ use parser::Inline;
 use regex::Regex;
 
 pub fn parse_code(text: &str) -> Option<(Inline, usize)> {
-    let pattern = Regex::new("^@(?P<text>.*?)@").unwrap();
+    let pattern = Regex::new("^@(?P<code>.*?)@").unwrap();
 
     if pattern.is_match(text) {
         let caps = pattern.captures(text).unwrap();
-        let content = caps.name("text").unwrap();
+        let code = caps.name("code").unwrap();
 
-        Some((Inline::Code(content.to_string()), content.len() + 2))
+        Some((Inline::Code(code.to_string()), caps.at(0).unwrap().len()))
     } else {
         None
     }
