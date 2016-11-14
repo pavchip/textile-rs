@@ -56,3 +56,4 @@ assert_eq!(html, "<h1><strong>Textile markup language</strong></h1>".to_string()
 + [x] Attributes in elements
 + [x] CSS properties, classes and ID's in elements
 + [ ] Characters escaping
++ [ ] Unicode support
