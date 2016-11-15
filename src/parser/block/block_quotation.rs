@@ -20,10 +20,12 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
         Some(value) => &lines[value..],
         None => lines
     };
+    let mut blocks = Vec::new();
     let mut strings = Vec::new();
 
     if pattern.is_match(lines[0]) {
         let caps = pattern.captures(lines[0]).unwrap();
+        let attrs = parse_block_attributes(caps.name("attributes").unwrap());
         strings.push((&lines[0][caps.at(0).unwrap().len()..]).to_string());
 
         if caps.name("mode").unwrap().len() == 1 {
@@ -35,9 +37,24 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
                 }
                 strings.push(line.to_string());
             }
+            blocks.push(Block::Paragraph {
+                attributes: attrs.clone(),
+                elements: parse_inline_elements(&*strings.join("\n")),
+                starts_with_p: false,
+            });
         } else {
             // Breaks parsing if line is block element.
+            let mut paragraph_idx = 0;
             for line in &lines[1..] {
+                // Make paragraph if line is empty.
+                if line.is_empty() {
+                    blocks.push(Block::Paragraph {
+                        attributes: attrs.clone(),
+                        elements: parse_inline_elements(&*(&strings[paragraph_idx..cur_line]).join("\n")),
+                        starts_with_p: false,
+                    });
+                    paragraph_idx = cur_line + 1;
+                }
                 cur_line += 1;
                 match parse_block(&[line]) {
                     Some((Block::Paragraph {starts_with_p, ..}, _)) => {
@@ -58,8 +75,8 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
 
         Some((
             Block::BlockQuotation {
-                attributes: parse_block_attributes(caps.name("attributes").unwrap()),
-                elements: parse_inline_elements(&*strings.join("\n")),
+                attributes: attrs.clone(),
+                elements: blocks,
             },
             cur_line
         ))
@@ -81,12 +98,18 @@ mod tests {
                 Block::BlockQuotation {
                     attributes: Attributes::new(),
                     elements: vec![
-                        Inline::Bold {
+                        Block::Paragraph {
                             attributes: Attributes::new(),
                             elements: vec![
-                                Inline::Text("My quote".to_string())
+                                Inline::Bold {
+                                    attributes: Attributes::new(),
+                                    elements: vec![
+                                    Inline::Text("My quote".to_string())
+                                    ],
+                                    tag_type: BoldTagType::Strong
+                                }
                             ],
-                            tag_type: BoldTagType::Strong
+                            starts_with_p: false,
                         }
                     ],
                 },

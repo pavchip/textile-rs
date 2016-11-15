@@ -9,7 +9,7 @@ use parser::*;
 /// assert_eq!(html, "<h2><strong>Heading of level 2</strong></h2>".to_string());
 /// ```
 pub fn render(text: &str) -> String {
-    render_blocks(parse(text))
+    render_blocks(&parse(text))
 }
 
 fn render_attributes(attributes: &[Attribute]) -> String {
@@ -40,14 +40,14 @@ fn render_attributes(attributes: &[Attribute]) -> String {
      }
 }
 
-fn render_blocks(elements: Vec<Block>) -> String {
+fn render_blocks(elements: &[Block]) -> String {
     let mut res = String::new();
 
-    for element in &elements {
+    for element in elements {
         let html = match *element {
             Block::Heading {ref attributes, level, ref elements} => format!("<h{0}{1}>{2}</h{0}>", level, render_attributes(attributes), render_inline_elements(elements)),
             Block::Paragraph {ref attributes, ref elements, ..} => format!("<p{}>{}</p>", render_attributes(attributes), render_inline_elements(elements)),
-            Block::BlockQuotation {ref attributes, ref elements} => format!("<blockquote{}>{}</blockquote>", render_attributes(attributes), render_inline_elements(elements)),
+            Block::BlockQuotation {ref attributes, ref elements} => format!("<blockquote{}>{}</blockquote>", render_attributes(attributes), render_blocks(elements)),
             Block::CodeBlock {ref attributes, ref code} => format!("<pre{}><code>{}</code></pre>", render_attributes(attributes), code),
         };
         res.push_str(&*html);

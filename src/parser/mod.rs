@@ -25,7 +25,7 @@ pub enum Block {
     /// Block quotation, e.g. `bq. Some quote`.
     BlockQuotation {
         attributes: Attributes,
-        elements: Vec<Inline>,
+        elements: Vec<Block>,
     },
     /// Code block, e.g. `bc. print("Hello World")`.
     CodeBlock {
@@ -113,7 +113,7 @@ pub enum ItalicTagType {
     Italic,
 }
 
-#[derive(Debug, PartialEq)]
+#[derive(Debug, Clone, PartialEq)]
 pub enum Attribute {
     Align(String),
     Class(Vec<String>),
