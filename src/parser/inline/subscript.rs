@@ -1,13 +1,11 @@
 use parser::Inline;
 use parser::inline::parse_inline_elements;
+use parser::patterns::SUBSCRIPT_TEXT_PATTERN;
 use parser::utils::parse_inline_attributes;
-use regex::Regex;
 
 pub fn parse_subscript_text(text: &str) -> Option<(Inline, usize)> {
-    let pattern = Regex::new("^(?P<count1>~+)(?P<string>.+?)(?P<count2>~+)").unwrap();
-
-    if pattern.is_match(text) {
-        let caps = pattern.captures(text).unwrap();
+    if SUBSCRIPT_TEXT_PATTERN.is_match(text) {
+        let caps = SUBSCRIPT_TEXT_PATTERN.captures(text).unwrap();
         let group_0 = caps.at(0).unwrap();
         let (attrs, text) = parse_inline_attributes(caps.name("string").unwrap());
         let count1 = caps.name("count1").unwrap().len();
@@ -17,7 +15,7 @@ pub fn parse_subscript_text(text: &str) -> Option<(Inline, usize)> {
             Some((
                 Inline::Subscript {
                     attributes: attrs,
-                    elements: parse_inline_elements(&*text),
+                    elements: parse_inline_elements(&[&*text]),
                 },
                 group_0.len()
             ))

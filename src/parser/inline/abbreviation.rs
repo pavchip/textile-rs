@@ -1,11 +1,9 @@
 use parser::Inline;
-use regex::Regex;
+use parser::patterns::ABBREVIATION_PATTERN;
 
 pub fn parse_abbreviation(text: &str) -> Option<(Inline, usize)> {
-    let pattern = Regex::new(r"^(?P<abbreviation>\p{Lu}{3,})\((?P<transcript>.*?)\)").unwrap();
-
-    if pattern.is_match(text) {
-        let caps = pattern.captures(text).unwrap();
+    if ABBREVIATION_PATTERN.is_match(text) {
+        let caps = ABBREVIATION_PATTERN.captures(text).unwrap();
         let abbreviation = caps.name("abbreviation").unwrap().to_string();
         let transcript = caps.name("transcript").unwrap().to_string();
 

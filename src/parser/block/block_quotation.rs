@@ -1,11 +1,10 @@
 use parser::Block;
 use parser::block::parse_block;
 use parser::inline::parse_inline_elements;
+use parser::patterns::BLOCK_QUOTATION_PATTERN;
 use parser::utils::parse_block_attributes;
-use regex::Regex;
 
 pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
-    let pattern = Regex::new("bq(?P<attributes>.*?)(?P<mode>\\.{1,2}) ").unwrap();
     let pos = lines.iter().position(|el| !el.is_empty());
     let mut cur_line = match pos {
         Some(value) => {
@@ -23,10 +22,10 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
     let mut blocks = Vec::new();
     let mut strings = Vec::new();
 
-    if pattern.is_match(lines[0]) {
-        let caps = pattern.captures(lines[0]).unwrap();
+    if BLOCK_QUOTATION_PATTERN.is_match(lines[0]) {
+        let caps = BLOCK_QUOTATION_PATTERN.captures(lines[0]).unwrap();
         let attrs = parse_block_attributes(caps.name("attributes").unwrap());
-        strings.push((&lines[0][caps.at(0).unwrap().len()..]).to_string());
+        strings.push(&lines[0][caps.at(0).unwrap().len()..]);
 
         if caps.name("mode").unwrap().len() == 1 {
             // Breaks parsing if line is empty.
@@ -35,11 +34,11 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
                 if line.is_empty() {
                     break;
                 }
-                strings.push(line.to_string());
+                strings.push(line);
             }
             blocks.push(Block::Paragraph {
                 attributes: attrs.clone(),
-                elements: parse_inline_elements(&*strings.join("\n")),
+                elements: parse_inline_elements(&strings),
                 starts_with_p: false,
             });
         } else {
@@ -50,7 +49,7 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
                 if line.is_empty() {
                     blocks.push(Block::Paragraph {
                         attributes: attrs.clone(),
-                        elements: parse_inline_elements(&*(&strings[paragraph_idx..cur_line]).join("\n")),
+                        elements: parse_inline_elements(&strings[paragraph_idx..cur_line]),
                         starts_with_p: false,
                     });
                     paragraph_idx = cur_line + 1;
@@ -69,7 +68,7 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
                     },
                     _ => {},
                 }
-                strings.push(line.to_string());
+                strings.push(line);
             }
         }
 

@@ -1,5 +1,6 @@
 mod block;
 mod inline;
+mod patterns;
 mod utils;
 
 use parser::block::parse_blocks;

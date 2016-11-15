@@ -1,20 +1,18 @@
 use parser::Inline;
 use parser::inline::parse_inline_elements;
+use parser::patterns::LINK_PATTERN;
 use parser::utils::parse_inline_attributes;
-use regex::Regex;
 
 pub fn parse_link(text: &str) -> Option<(Inline, usize)> {
-    let pattern = Regex::new("^\"(?P<string>.+?)\":(?P<url>[^ \\(\\)]+)").unwrap();
-
-    if pattern.is_match(text) {
-        let caps = pattern.captures(text).unwrap();
+    if LINK_PATTERN.is_match(text) {
+        let caps = LINK_PATTERN.captures(text).unwrap();
         let (attrs, text) = parse_inline_attributes(caps.name("string").unwrap());
         let url = caps.name("url").unwrap().to_string();
 
         Some((
             Inline::Link {
                 attributes: attrs,
-                description: parse_inline_elements(&*text),
+                description: parse_inline_elements(&[&*text]),
                 url: url,
             },
             caps.at(0).unwrap().len()

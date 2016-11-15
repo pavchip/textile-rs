@@ -1,10 +1,9 @@
 use parser::Block;
 use parser::inline::parse_inline_elements;
+use parser::patterns::HEADING_PATTERN;
 use parser::utils::parse_block_attributes;
-use regex::Regex;
 
 pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
-    let pattern = Regex::new("h(?P<level>[1-6])(?P<attributes>.*)\\. ").unwrap();
     let pos = lines.iter().position(|el| !el.is_empty());
     let mut cur_line = match pos {
         Some(value) => {
@@ -21,25 +20,25 @@ pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
     };
     let mut strings = Vec::new();
 
-    if pattern.is_match(lines[0]) {
-        let caps = pattern.captures(lines[0]).unwrap();
+    if HEADING_PATTERN.is_match(lines[0]) {
+        let caps = HEADING_PATTERN.captures(lines[0]).unwrap();
         let level: u8 = caps.name("level").unwrap().parse().unwrap();
 
-        strings.push((&lines[0][caps.at(0).unwrap().len()..]).to_string());
+        strings.push(&lines[0][caps.at(0).unwrap().len()..]);
 
         for line in &lines[1..] {
             cur_line += 1;
             if line.is_empty() {
                 break;
             }
-            strings.push(line.to_string());
+            strings.push(line);
         }
 
         Some((
             Block::Heading {
                 attributes: parse_block_attributes(caps.name("attributes").unwrap()),
                 level: level,
-                elements: parse_inline_elements(&*strings.join("\n")),
+                elements: parse_inline_elements(&strings),
             },
             cur_line
         ))

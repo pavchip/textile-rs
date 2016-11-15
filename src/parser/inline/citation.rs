@@ -1,19 +1,17 @@
 use parser::Inline;
 use parser::inline::parse_inline_elements;
+use parser::patterns::CITATION_PATTERN;
 use parser::utils::parse_inline_attributes;
-use regex::Regex;
 
 pub fn parse_citation(text: &str) -> Option<(Inline, usize)> {
-    let pattern = Regex::new(r"^\?\?(?P<string>.+?)\?\?").unwrap();
-
-    if pattern.is_match(text) {
-        let caps = pattern.captures(text).unwrap();
+    if CITATION_PATTERN.is_match(text) {
+        let caps = CITATION_PATTERN.captures(text).unwrap();
         let (attrs, text) = parse_inline_attributes(caps.name("string").unwrap());
 
         Some((
             Inline::Citation {
                 attributes: attrs,
-                elements: parse_inline_elements(&*text),
+                elements: parse_inline_elements(&[&*text]),
             },
             caps.at(0).unwrap().len()
         ))

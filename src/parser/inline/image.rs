@@ -1,13 +1,10 @@
 use parser::{Attribute, Inline};
 use parser::utils::parse_inline_attributes;
-use regex::Regex;
+use parser::patterns::{IMAGE_PATTERN, IMAGE_URL_ALT_PATTERN};
 
 pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
-    let pattern = Regex::new("^!(?P<align>[<|>|=]?)(?P<string>.+?)!").unwrap();
-    let url_alt_pattern = Regex::new("(?P<url>[^\\(\\) ]+)(?:\\((?P<alt>.+)\\))?").unwrap();
-
-    if pattern.is_match(text) {
-        let caps = pattern.captures(text).unwrap();
+    if IMAGE_PATTERN.is_match(text) {
+        let caps = IMAGE_PATTERN.captures(text).unwrap();
         let group_0_len = caps.at(0).unwrap().len();
         let align = match caps.name("align").unwrap() {
             "<" => "left",
@@ -16,9 +13,9 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
             _ => "",
         }.to_string();
         let (mut attrs, text) = parse_inline_attributes(caps.name("string").unwrap());
-        let url_alt_pattern_caps = url_alt_pattern.captures(&*text).unwrap();
-        let url = url_alt_pattern_caps.name("url").unwrap().to_string();
-        let alt = match url_alt_pattern_caps.name("alt") {
+        let image_url_alt_caps = IMAGE_URL_ALT_PATTERN.captures(&*text).unwrap();
+        let url = image_url_alt_caps.name("url").unwrap().to_string();
+        let alt = match image_url_alt_caps.name("alt") {
             Some(alt_text) => alt_text,
             None => "",
         }.to_string();

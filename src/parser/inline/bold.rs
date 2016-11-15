@@ -1,13 +1,11 @@
 use parser::{Inline, BoldTagType};
 use parser::inline::parse_inline_elements;
+use parser::patterns::BOLD_TEXT_PATTERN;
 use parser::utils::parse_inline_attributes;
-use regex::Regex;
 
 pub fn parse_bold_text(text: &str) -> Option<(Inline, usize)> {
-    let pattern = Regex::new(r"^(?P<count1>\*+)(?P<string>.+?)(?P<count2>\*+)").unwrap();
-
-    if pattern.is_match(text) {
-        let caps = pattern.captures(text).unwrap();
+    if BOLD_TEXT_PATTERN.is_match(text) {
+        let caps = BOLD_TEXT_PATTERN.captures(text).unwrap();
         let group_0 = caps.at(0).unwrap();
         let (attrs, text) = parse_inline_attributes(caps.name("string").unwrap());
         let count1 = caps.name("count1").unwrap().len();
@@ -22,7 +20,7 @@ pub fn parse_bold_text(text: &str) -> Option<(Inline, usize)> {
             Some((
                 Inline::Bold {
                     attributes: attrs,
-                    elements: parse_inline_elements(&*text),
+                    elements: parse_inline_elements(&[&*text]),
                     tag_type: tag_type,
                 },
                 group_0.len()

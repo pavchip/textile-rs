@@ -23,8 +23,7 @@ use self::image::parse_image;
 use self::link::parse_link;
 use parser::Inline;
 
-pub fn parse_inline_elements(text: &str) -> Vec<Inline> {
-    let lines: Vec<&str> = text.trim().lines().collect();
+pub fn parse_inline_elements(lines: &[&str]) -> Vec<Inline> {
     let mut tokens = Vec::new();
 
     for (idx, line) in lines.iter().enumerate() {

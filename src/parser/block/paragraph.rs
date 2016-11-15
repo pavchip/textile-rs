@@ -1,10 +1,9 @@
 use parser::Block;
 use parser::inline::parse_inline_elements;
+use parser::patterns::PARAGRAPH_PATTERN;
 use parser::utils::*;
-use regex::Regex;
 
 pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
-    let pattern = Regex::new("(?:p(?P<attributes>.*)\\. )?").unwrap();
     let pos = lines.iter().position(|el| !el.is_empty());
     let mut cur_line = match pos {
         Some(value) => {
@@ -21,28 +20,28 @@ pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
     };
     let mut strings = Vec::new();
 
-    if pattern.is_match(lines[0]) {
-        let caps = pattern.captures(lines[0]).unwrap();
+    if PARAGRAPH_PATTERN.is_match(lines[0]) {
+        let caps = PARAGRAPH_PATTERN.captures(lines[0]).unwrap();
         let attributes = match caps.name("attributes") {
             Some(string) => string,
             None => "",
         };
 
-        strings.push((&lines[0][caps.at(0).unwrap().len()..]).to_string());
+        strings.push(&lines[0][caps.at(0).unwrap().len()..]);
 
         for line in &lines[1..] {
             cur_line += 1;
             if line.is_empty() {
                 break;
             }
-            strings.push(line.to_string());
+            strings.push(line);
         }
 
         Some((
             Block::Paragraph {
                 attributes: parse_block_attributes(attributes),
-                elements: parse_inline_elements(&*strings.join("\n")),
-                starts_with_p: pattern.find(&lines[0]).unwrap().1 != 0
+                elements: parse_inline_elements(&strings),
+                starts_with_p: PARAGRAPH_PATTERN.find(&lines[0]).unwrap().1 != 0
             },
             cur_line
         ))

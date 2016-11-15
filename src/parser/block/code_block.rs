@@ -1,10 +1,9 @@
 use parser::Block;
 use parser::block::parse_block;
+use parser::patterns::CODE_BLOCK_PATTERN;
 use parser::utils::parse_block_attributes;
-use regex::Regex;
 
 pub fn parse_code_block(lines: &[&str]) -> Option<(Block, usize)> {
-    let pattern = Regex::new("bc(?P<attributes>.*?)(?P<mode>\\.{1,2}) ").unwrap();
     let pos = lines.iter().position(|el| !el.is_empty());
     let mut cur_line = match pos {
         Some(value) => {
@@ -21,9 +20,9 @@ pub fn parse_code_block(lines: &[&str]) -> Option<(Block, usize)> {
     };
     let mut strings = Vec::new();
 
-    if pattern.is_match(lines[0]) {
-        let caps = pattern.captures(lines[0]).unwrap();
-        strings.push((&lines[0][caps.at(0).unwrap().len()..]).to_string());
+    if CODE_BLOCK_PATTERN.is_match(lines[0]) {
+        let caps = CODE_BLOCK_PATTERN.captures(lines[0]).unwrap();
+        strings.push(&lines[0][caps.at(0).unwrap().len()..]);
 
         if caps.name("mode").unwrap().len() == 1 {
             // Breaks parsing if line is empty.
@@ -32,7 +31,7 @@ pub fn parse_code_block(lines: &[&str]) -> Option<(Block, usize)> {
                 if line.is_empty() {
                     break;
                 }
-                strings.push(line.to_string());
+                strings.push(line);
             }
         } else {
             // Breaks parsing if line is block element.
@@ -51,7 +50,7 @@ pub fn parse_code_block(lines: &[&str]) -> Option<(Block, usize)> {
                     },
                     _ => {},
                 }
-                strings.push(line.to_string());
+                strings.push(line);
             }
         }
 
