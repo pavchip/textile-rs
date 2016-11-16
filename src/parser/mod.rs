@@ -128,8 +128,25 @@ pub enum Attribute {
 /// # Example
 ///
 /// ```rust
+/// use textile::parser::*;
+///
 /// let text = "h1. _String with text_.";
-/// textile::parser::parse(text); // [Heading { attributes: {}, level: 1, elements: [Italic([Text("String with text")], Emphasis), Text(".")] }]
+/// assert_eq!(parse(text), vec![
+///     Block::Heading {
+///         attributes: vec![],
+///         elements: vec![
+///             Inline::Italic {
+///                 attributes: vec![],
+///                 tag_type: ItalicTagType::Emphasis,
+///                 elements: vec![
+///                     Inline::Text("String with text".to_string())
+///                 ]
+///             },
+///             Inline::Text(".".to_string())
+///         ],
+///         level: 1
+///     }
+/// ]);
 /// ```
 pub fn parse<S>(text: S) -> Vec<Block> where S: Into<String> {
     parse_blocks(&text.into().lines().collect::<Vec<&str>>())
