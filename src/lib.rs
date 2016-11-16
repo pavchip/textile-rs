@@ -27,4 +27,4 @@ extern crate regex;
 pub mod parser;
 mod renderer;
 
-pub use renderer::render;
+pub use renderer::*;
