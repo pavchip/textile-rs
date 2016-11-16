@@ -1,5 +1,6 @@
 use parser::Block;
 use parser::block::parse_block;
+use parser::block::paragraph::parse_paragraph;
 use parser::inline::parse_inline_elements;
 use parser::patterns::BLOCK_QUOTATION_PATTERN;
 use parser::utils::parse_block_attributes;
@@ -43,17 +44,7 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
             });
         } else {
             // Breaks parsing if line is block element.
-            let mut paragraph_idx = 0;
             for line in &lines[1..] {
-                // Make paragraph if line is empty.
-                if line.is_empty() {
-                    blocks.push(Block::Paragraph {
-                        attributes: attrs.clone(),
-                        elements: parse_inline_elements(&strings[paragraph_idx..cur_line]),
-                        starts_with_p: false,
-                    });
-                    paragraph_idx = cur_line + 1;
-                }
                 cur_line += 1;
                 match parse_block(&[line]) {
                     Some((Block::Paragraph {starts_with_p, ..}, _)) => {
@@ -69,6 +60,16 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
                     _ => {},
                 }
                 strings.push(line);
+            }
+            let mut line_pos = 0;
+            while line_pos < strings.len() {
+                if let Some((mut paragraph, lines_count)) = parse_paragraph(&strings[line_pos..strings.len()]) {
+                    if let Block::Paragraph {ref mut attributes, ..} = paragraph {
+                        *attributes = attrs.clone();
+                    }
+                    line_pos += lines_count;
+                    blocks.push(paragraph);
+                }
             }
         }
 
