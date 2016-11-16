@@ -9,7 +9,7 @@ use self::heading::parse_heading;
 use self::paragraph::parse_paragraph;
 use parser::Block;
 
-pub fn parse_blocks(text: &str) -> Vec<Block> {
+pub fn parse_blocks(text: String) -> Vec<Block> {
     let mut blocks = Vec::new();
     let lines: Vec<&str> = text.lines().collect();
     let mut cur_line = 0;

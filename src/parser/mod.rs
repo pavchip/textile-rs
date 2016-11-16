@@ -131,6 +131,6 @@ pub enum Attribute {
 /// let text = "h1. _String with text_.";
 /// textile::parser::parse(text); // [Heading { attributes: {}, level: 1, elements: [Italic([Text("String with text")], Emphasis), Text(".")] }]
 /// ```
-pub fn parse(text: &str) -> Vec<Block> {
-    parse_blocks(text)
+pub fn parse<S>(text: S) -> Vec<Block> where S: Into<String> {
+    parse_blocks(text.into())
 }

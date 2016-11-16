@@ -8,8 +8,8 @@ use parser::*;
 /// let html = textile::render("h2. *Heading of level 2*");
 /// assert_eq!(html, "<h2><strong>Heading of level 2</strong></h2>".to_string());
 /// ```
-pub fn render(text: &str) -> String {
-    render_blocks(&parse(text))
+pub fn render<S>(text: S) -> String where S: Into<String> {
+    render_blocks(&parse(text.into()))
 }
 
 fn render_attributes(attributes: &[Attribute]) -> String {
