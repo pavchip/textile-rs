@@ -1,7 +1,7 @@
+mod attributes;
 mod block;
 mod inline;
 mod patterns;
-mod utils;
 
 use into_string::*;
 use parser::block::parse_blocks;

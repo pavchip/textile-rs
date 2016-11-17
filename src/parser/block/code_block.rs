@@ -1,7 +1,7 @@
 use parser::Block;
+use parser::attributes::parse_block_attributes;
 use parser::block::parse_block;
 use parser::patterns::CODE_BLOCK_PATTERN;
-use parser::utils::parse_block_attributes;
 
 pub fn parse_code_block(lines: &[&str]) -> Option<(Block, usize)> {
     let pos = lines.iter().position(|el| !el.is_empty());

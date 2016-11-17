@@ -1,7 +1,7 @@
 use parser::{Inline, ItalicTagType};
+use parser::attributes::parse_inline_attributes;
 use parser::inline::parse_inline_elements;
 use parser::patterns::ITALIC_TEXT_PATTERN;
-use parser::utils::parse_inline_attributes;
 
 pub fn parse_italic_text(text: &str) -> Option<(Inline, usize)> {
     if ITALIC_TEXT_PATTERN.is_match(text) {

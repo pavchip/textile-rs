@@ -1,9 +1,9 @@
 use parser::Block;
+use parser::attributes::parse_block_attributes;
 use parser::block::parse_block;
 use parser::block::paragraph::parse_paragraph;
 use parser::inline::parse_inline_elements;
 use parser::patterns::BLOCK_QUOTATION_PATTERN;
-use parser::utils::parse_block_attributes;
 
 pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
     let pos = lines.iter().position(|el| !el.is_empty());

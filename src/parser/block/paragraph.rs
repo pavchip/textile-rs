@@ -1,7 +1,7 @@
 use parser::Block;
+use parser::attributes::parse_block_attributes;
 use parser::inline::parse_inline_elements;
 use parser::patterns::PARAGRAPH_PATTERN;
-use parser::utils::*;
 
 pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
     let pos = lines.iter().position(|el| !el.is_empty());

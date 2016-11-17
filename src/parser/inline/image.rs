@@ -1,5 +1,5 @@
 use parser::{Attribute, Inline};
-use parser::utils::parse_inline_attributes;
+use parser::attributes::parse_inline_attributes;
 use parser::patterns::{IMAGE_PATTERN, IMAGE_URL_ALT_PATTERN};
 
 pub fn parse_image(text: &str) -> Option<(Inline, usize)> {

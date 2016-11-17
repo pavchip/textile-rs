@@ -1,7 +1,7 @@
 use parser::Inline;
+use parser::attributes::parse_inline_attributes;
 use parser::inline::parse_inline_elements;
 use parser::patterns::CITATION_PATTERN;
-use parser::utils::parse_inline_attributes;
 
 pub fn parse_citation(text: &str) -> Option<(Inline, usize)> {
     if CITATION_PATTERN.is_match(text) {

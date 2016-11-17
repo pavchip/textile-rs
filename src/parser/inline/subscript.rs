@@ -1,7 +1,7 @@
 use parser::Inline;
+use parser::attributes::parse_inline_attributes;
 use parser::inline::parse_inline_elements;
 use parser::patterns::SUBSCRIPT_TEXT_PATTERN;
-use parser::utils::parse_inline_attributes;
 
 pub fn parse_subscript_text(text: &str) -> Option<(Inline, usize)> {
     if SUBSCRIPT_TEXT_PATTERN.is_match(text) {
