@@ -20,8 +20,6 @@
 
 #[macro_use]
 extern crate lazy_static;
-#[macro_use]
-extern crate pipeline;
 extern crate regex;
 
 mod into_string;
