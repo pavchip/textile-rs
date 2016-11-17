@@ -18,6 +18,7 @@ impl Default for RenderOptions {
 }
 
 /// Renders Textile string into HTML string with default options.
+/// Accepts `&str`, `String` or `Path` data type.
 ///
 /// # Example
 ///
@@ -30,6 +31,7 @@ pub fn render<S: IntoString>(text: S) -> String {
 }
 
 /// Renders Textile string into HTML string with specified options.
+/// Accepts `&str`, `String` or `Path` data type.
 ///
 /// # Example
 ///

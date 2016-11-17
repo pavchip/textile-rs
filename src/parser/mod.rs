@@ -1,3 +1,5 @@
+//! Parser module for Textile language.
+
 mod attributes;
 mod block;
 mod inline;
@@ -7,6 +9,7 @@ use into_string::*;
 use parser::block::parse_blocks;
 use std::collections::HashMap;
 
+/// Vector of Textile attributes, e.g. classes, ID's or CSS styles.
 pub type Attributes = Vec<Attribute>;
 
 /// Block element, e.g. heading, paragraph or code block.
@@ -18,7 +21,7 @@ pub enum Block {
         elements: Vec<Inline>,
         level: u8,
     },
-    /// Paragraph of inline elements.
+    /// Paragraph, e.g. `p. Some text` or `Some text`.
     Paragraph {
         attributes: Attributes,
         elements: Vec<Inline>,
@@ -101,30 +104,40 @@ pub enum Inline {
     },
 }
 
-/// Tag type for bold text, e.g. `<b>` or `<strong>`.
+/// Tag type for bold text.
 #[derive(Debug, PartialEq)]
 pub enum BoldTagType {
+    /// Converts into HTML `<strong>` tag.
     Strong,
+    /// Converts into HTML `<b>` tag.
     Bold,
 }
 
-/// Tag type for italic text, e.g. `<i>` or `<em>`.
+/// Tag type for italic text.
 #[derive(Debug, PartialEq)]
 pub enum ItalicTagType {
+    /// Converts into HTML `<em>` tag.
     Emphasis,
+    /// Converts into HTML `<i>` tag.
     Italic,
 }
 
+/// Textile attribute.
 #[derive(Debug, Clone, PartialEq)]
 pub enum Attribute {
+    /// Image align. Convertes into HTML `align` attribute.
     Align(String),
+    /// Vector of HTML classes. Converts into HTML `class` attribute.
     Class(Vec<String>),
+    /// Converts into HTML `id` attribute.
     Id(String),
+    /// Converts into HTML `lang` attribute.
     Language(String),
+    /// CSS styles. Converts into HTML `style` attribute.
     Style(HashMap<String, String>)
 }
 
-/// Splits text into tokens. Returns vector of block elements.
+/// Splits text into tokens. Accepts `&str`, `String` or `Path` data type. Returns vector of block elements.
 ///
 /// # Example
 ///
