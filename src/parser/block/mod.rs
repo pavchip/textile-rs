@@ -23,11 +23,20 @@ pub fn parse_blocks(lines: &[&str]) -> Vec<Block> {
 }
 
 pub fn parse_block(lines: &[&str]) -> Option<(Block, usize)> {
-    pipe_opt!(
-        lines
-        => parse_block_quotation
-        => parse_code_block
-        => parse_heading
-        => parse_paragraph
-    )
+    lazy_static! {
+        static ref FNS: Vec<fn(&[&str]) -> Option<(Block, usize)>> = vec![
+            parse_block_quotation,
+            parse_code_block,
+            parse_heading,
+            parse_paragraph,
+        ];
+    }
+
+    for f in FNS.iter() {
+        let res = f(lines);
+        if let Some(_) = res {
+            return res;
+        }
+    }
+    None
 }

@@ -57,19 +57,27 @@ pub fn parse_inline_elements(lines: &[&str]) -> Vec<Inline> {
 }
 
 fn parse_inline_element(text: &str) -> Option<(Inline, usize)> {
-    pipe_opt!(
-        text
-        // => parse_break
-        => parse_bold_text
-        => parse_italic_text
-        => parse_strikethrough_text
-        => parse_underlined_text
-        => parse_subscript_text
-        => parse_superscript_text
-        => parse_abbreviation
-        => parse_code
-        => parse_citation
-        => parse_image
-        => parse_link
-    )
+    lazy_static! {
+        static ref FNS: Vec<fn(&str) -> Option<(Inline, usize)>> = vec![
+            parse_abbreviation,
+            parse_bold_text,
+            parse_citation,
+            parse_code,
+            parse_image,
+            parse_italic_text,
+            parse_link,
+            parse_strikethrough_text,
+            parse_subscript_text,
+            parse_superscript_text,
+            parse_underlined_text,
+        ];
+    }
+
+    for f in FNS.iter() {
+        let res = f(text);
+        if let Some(_) = res {
+            return res;
+        }
+    }
+    None
 }
