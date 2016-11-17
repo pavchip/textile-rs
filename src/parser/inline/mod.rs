@@ -47,9 +47,9 @@ pub fn parse_inline_elements(lines: &[&str]) -> Vec<Inline> {
             }
         }
         if !tmp.is_empty() {
-            tokens.push(Inline::Text(tmp));
+            tokens.push(Inline::Text(tmp.clone()));
         }
-        if idx < lines.len() - 1 {
+        if idx < lines.len() - 1 && !lines[idx + 1].starts_with(" ") {
             tokens.push(Inline::Break);
         }
     }
