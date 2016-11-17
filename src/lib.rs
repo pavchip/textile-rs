@@ -24,6 +24,7 @@ extern crate lazy_static;
 extern crate pipeline;
 extern crate regex;
 
+mod into_string;
 pub mod parser;
 mod renderer;
 

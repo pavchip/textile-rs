@@ -3,6 +3,7 @@ mod inline;
 mod patterns;
 mod utils;
 
+use into_string::*;
 use parser::block::parse_blocks;
 use std::collections::HashMap;
 
@@ -148,6 +149,6 @@ pub enum Attribute {
 ///     }
 /// ]);
 /// ```
-pub fn parse<S>(text: S) -> Vec<Block> where S: Into<String> {
-    parse_blocks(&text.into().lines().collect::<Vec<&str>>())
+pub fn parse<S: IntoString>(text: S) -> Vec<Block> {
+    parse_blocks(&text.into_string().lines().collect::<Vec<&str>>())
 }

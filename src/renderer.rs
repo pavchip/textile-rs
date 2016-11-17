@@ -1,3 +1,4 @@
+use into_string::*;
 use parser::*;
 use std::iter;
 
@@ -24,8 +25,8 @@ impl Default for RenderOptions {
 /// let html = textile::render("h2. *Heading of level 2*");
 /// assert_eq!(html, "<h2><strong>Heading of level 2</strong></h2>".to_string());
 /// ```
-pub fn render<S>(text: S) -> String where S: Into<String> {
-    render_blocks(&parse(text.into()), &RenderOptions::default())
+pub fn render<S: IntoString>(text: S) -> String {
+    render_blocks(&parse(text.into_string()), &RenderOptions::default())
 }
 
 /// Renders Textile string into HTML string with specified options.
@@ -36,8 +37,8 @@ pub fn render<S>(text: S) -> String where S: Into<String> {
 /// let html = textile::render_with("h2. *Heading of level 2*", textile::RenderOptions::default());
 /// assert_eq!(html, "<h2><strong>Heading of level 2</strong></h2>".to_string());
 /// ```
-pub fn render_with<S>(text: S, options: RenderOptions) -> String where S: Into<String> {
-    render_blocks(&parse(text.into()), &options)
+pub fn render_with<S: IntoString>(text: S, options: RenderOptions) -> String {
+    render_blocks(&parse(text.into_string()), &options)
 }
 
 fn render_attributes(attributes: &[Attribute], options: &RenderOptions) -> String {
