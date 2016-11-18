@@ -34,7 +34,7 @@ assert_eq!(html, "<h1><strong>Textile markup language</strong></h1>".to_string()
   + [x] Comments
   + [ ] Pre-formatted text
   + [ ] No Textile formatting
-+ [ ] Inline elements
++ [x] Inline elements
   + [x] Bold text
   + [x] Italic text
   + [x] Subscript text
@@ -46,7 +46,7 @@ assert_eq!(html, "<h1><strong>Textile markup language</strong></h1>".to_string()
   + [x] Link
   + [x] Image
   + [x] Abbreviations
-  + [ ] Span element
+  + [x] Span element
 + [ ] Lists
   + [ ] Bulleted list
   + [ ] Numbered list

@@ -149,6 +149,7 @@ fn render_inline_elements(elements: &[Inline], options: &RenderOptions) -> Strin
                     format!("<img src=\"{}\"{}>", url, render_attributes(attributes, options))
                 }
             },
+            Inline::Span {ref attributes, ref elements} => format!("<span{}>{}</span>", render_attributes(attributes, options), render_inline_elements(elements, options)),
         };
         res.push_str(&html);
     }

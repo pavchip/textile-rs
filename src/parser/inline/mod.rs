@@ -5,6 +5,7 @@ mod code;
 mod image;
 mod italic;
 mod link;
+mod span;
 mod strikethrough;
 mod subscript;
 mod superscript;
@@ -21,6 +22,7 @@ use self::code::parse_code;
 use self::citation::parse_citation;
 use self::image::parse_image;
 use self::link::parse_link;
+use self::span::parse_span;
 use parser::Inline;
 
 pub fn parse_inline_elements(lines: &[&str]) -> Vec<Inline> {
@@ -66,6 +68,7 @@ fn parse_inline_element(text: &str) -> Option<(Inline, usize)> {
             parse_image,
             parse_italic_text,
             parse_link,
+            parse_span,
             parse_strikethrough_text,
             parse_subscript_text,
             parse_superscript_text,

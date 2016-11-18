@@ -104,6 +104,11 @@ pub enum Inline {
         alt: String,
         url: String,
     },
+    /// Span element, e.g. `%Span text%`.
+    Span {
+        attributes: Attributes,
+        elements: Vec<Inline>,
+    },
 }
 
 /// Tag type for bold text.
