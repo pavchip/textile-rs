@@ -7,7 +7,7 @@ lazy_static! {
     pub static ref HEADING_PATTERN: Regex = Regex::new("h(?P<level>[1-6])(?P<attributes>.*)\\. ").unwrap();
     pub static ref PARAGRAPH_PATTERN: Regex = Regex::new("(?:p(?P<attributes>.*)\\. )?").unwrap();
 
-    pub static ref ABBREVIATION_PATTERN: Regex = Regex::new(r"^(?P<abbreviation>\p{Lu}{3,})\((?P<transcript>.*?)\)").unwrap();
+    pub static ref ABBREVIATION_PATTERN: Regex = Regex::new(r"^(?P<abbreviation>\p{Lu}{3,})(?:\((?P<transcript>.*?)\))?").unwrap();
     pub static ref BOLD_TEXT_PATTERN: Regex = Regex::new(r"^(?P<count1>\*+)(?P<string>.+?)(?P<count2>\*+)").unwrap();
     pub static ref CITATION_PATTERN: Regex = Regex::new(r"^\?\?(?P<string>.+?)\?\?").unwrap();
     pub static ref CODE_PATTERN: Regex = Regex::new("^@(?P<code>.*?)@").unwrap();

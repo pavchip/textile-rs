@@ -5,15 +5,30 @@ pub fn parse_abbreviation(text: &str) -> Option<(Inline, usize)> {
     if ABBREVIATION_PATTERN.is_match(text) {
         let caps = ABBREVIATION_PATTERN.captures(text).unwrap();
         let abbreviation = caps.name("abbreviation").unwrap().to_string();
-        let transcript = caps.name("transcript").unwrap().to_string();
+        let transcript = match caps.name("transcript") {
+            Some(value) => value,
+            None => ""
+        }.to_string();
 
-        Some((
-            Inline::Abbreviation {
-                abbr: abbreviation,
-                transcript: transcript
-            },
-            caps.at(0).unwrap().len()
-        ))
+        if transcript.is_empty() {
+            Some((
+                Inline::Span {
+                    attributes: vec![],
+                    elements: vec![
+                        Inline::Text(abbreviation)
+                    ],
+                },
+                caps.at(0).unwrap().len()
+            ))
+        } else {
+            Some((
+                Inline::Abbreviation {
+                    abbr: abbreviation,
+                    transcript: transcript
+                },
+                caps.at(0).unwrap().len()
+            ))
+        }
     } else {
         None
     }
