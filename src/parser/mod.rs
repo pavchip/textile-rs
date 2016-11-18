@@ -15,6 +15,8 @@ pub type Attributes = Vec<Attribute>;
 /// Block element, e.g. heading, paragraph or code block.
 #[derive(Debug, PartialEq)]
 pub enum Block {
+    /// Comment block.
+    Comment(Vec<String>),
     /// Heading, e.g. `h3. Some text`.
     Heading {
         attributes: Attributes,

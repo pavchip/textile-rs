@@ -1,10 +1,12 @@
 mod block_quotation;
 mod code_block;
+mod comment;
 mod heading;
 mod paragraph;
 
 use self::block_quotation::parse_block_quotation;
 use self::code_block::parse_code_block;
+use self::comment::parse_comment;
 use self::heading::parse_heading;
 use self::paragraph::parse_paragraph;
 use parser::Block;
@@ -27,6 +29,7 @@ pub fn parse_block(lines: &[&str]) -> Option<(Block, usize)> {
         static ref FNS: Vec<fn(&[&str]) -> Option<(Block, usize)>> = vec![
             parse_block_quotation,
             parse_code_block,
+            parse_comment,
             parse_heading,
             parse_paragraph,
         ];
