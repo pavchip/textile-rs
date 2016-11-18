@@ -17,6 +17,8 @@ pub type Attributes = Vec<Attribute>;
 pub enum Block {
     /// Comment block.
     Comment(Vec<String>),
+    /// Disable Textile formatting in a block of text.
+    NoTextileBlock(Vec<String>),
     /// Heading, e.g. `h3. Some text`.
     Heading {
         attributes: Attributes,

@@ -109,6 +109,7 @@ fn render_block(element: &Block, options: &RenderOptions) -> String {
             }
         },
         Block::CodeBlock {ref attributes, ref code} => format!("<pre{}><code>{}</code></pre>", render_attributes(attributes, options), code),
+        Block::NoTextileBlock(ref strings) => strings.join("\n"),
         _ => "".to_string()
     }
 }

@@ -5,6 +5,7 @@ lazy_static! {
     pub static ref CODE_BLOCK_PATTERN: Regex = Regex::new("bc(?P<attributes>.*?)(?P<mode>\\.{1,2}) ").unwrap();
     pub static ref COMMENT_PATTERN: Regex = Regex::new("#{3}(?P<mode>\\.{1,2}) ").unwrap();
     pub static ref HEADING_PATTERN: Regex = Regex::new("h(?P<level>[1-6])(?P<attributes>.*)\\. ").unwrap();
+    pub static ref NO_TEXTILE_BLOCK_PATTERN: Regex = Regex::new("notextile(?P<mode>\\.{1,2}) ").unwrap();
     pub static ref PARAGRAPH_PATTERN: Regex = Regex::new("(?:p(?P<attributes>.*)\\. )?").unwrap();
 
     pub static ref ABBREVIATION_PATTERN: Regex = Regex::new(r"^(?P<abbreviation>\p{Lu}{3,})(?:\((?P<transcript>.*?)\))?").unwrap();
@@ -15,6 +16,7 @@ lazy_static! {
     pub static ref IMAGE_URL_ALT_PATTERN: Regex = Regex::new("(?P<url>[^\\(\\) ]+)(?:\\((?P<alt>.+)\\))?").unwrap();
     pub static ref ITALIC_TEXT_PATTERN: Regex = Regex::new("^(?P<count1>_+)(?P<string>.+?)(?P<count2>_+)").unwrap();
     pub static ref LINK_PATTERN: Regex = Regex::new("^\"(?P<string>.+?)\":(?P<url>[^ \\(\\)]+)").unwrap();
+    pub static ref NO_TEXTILE_INLINE_PATTERN: Regex = Regex::new("^={2}(?P<string>.*?)={2}").unwrap();
     pub static ref SPAN_PATTERN: Regex = Regex::new("^(?P<count1>%+)(?P<string>.+?)(?P<count2>%+)").unwrap();
     pub static ref STRIKETHROUGH_TEXT_PATTERN: Regex = Regex::new("^(?P<count1>-+)(?P<string>.+?)(?P<count2>-+)").unwrap();
     pub static ref SUBSCRIPT_TEXT_PATTERN: Regex = Regex::new("^(?P<count1>~+)(?P<string>.+?)(?P<count2>~+)").unwrap();
