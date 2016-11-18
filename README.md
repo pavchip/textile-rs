@@ -33,7 +33,7 @@ assert_eq!(html, "<h1><strong>Textile markup language</strong></h1>".to_string()
   + [ ] Raw HTML
   + [x] Comments
   + [ ] Pre-formatted text
-  + [ ] Disable Textile formatting block element
+  + [x] Disable Textile formatting block element
 + [x] Inline elements
   + [x] Bold text
   + [x] Italic text
