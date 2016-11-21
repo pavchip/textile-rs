@@ -28,7 +28,7 @@ mod tests {
     use super::*;
 
     #[test]
-    fn parses_italic_text_correctly() {
+    fn parses_link_correctly() {
         assert_eq!(
             parse_link("\"_Text_\":http://example.com"),
             Some((
