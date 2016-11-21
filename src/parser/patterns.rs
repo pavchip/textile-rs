@@ -1,12 +1,12 @@
 use regex::Regex;
 
 lazy_static! {
-    pub static ref BLOCK_QUOTATION_PATTERN: Regex = Regex::new("bq(?P<attributes>.*?)(?P<mode>\\.{1,2}) ").unwrap();
-    pub static ref CODE_BLOCK_PATTERN: Regex = Regex::new("bc(?P<attributes>.*?)(?P<mode>\\.{1,2}) ").unwrap();
-    pub static ref COMMENT_PATTERN: Regex = Regex::new("#{3}(?P<mode>\\.{1,2}) ").unwrap();
-    pub static ref HEADING_PATTERN: Regex = Regex::new("h(?P<level>[1-6])(?P<attributes>.*)\\. ").unwrap();
-    pub static ref NO_TEXTILE_BLOCK_PATTERN: Regex = Regex::new("notextile(?P<mode>\\.{1,2}) ").unwrap();
-    pub static ref PARAGRAPH_PATTERN: Regex = Regex::new("(?:p(?P<attributes>.*)\\. )?").unwrap();
+    pub static ref BLOCK_QUOTATION_PATTERN: Regex = Regex::new("^bq(?P<attributes>.*?)(?P<mode>\\.{1,2}) ").unwrap();
+    pub static ref CODE_BLOCK_PATTERN: Regex = Regex::new("^bc(?P<attributes>.*?)(?P<mode>\\.{1,2}) ").unwrap();
+    pub static ref COMMENT_PATTERN: Regex = Regex::new("^#{3}(?P<mode>\\.{1,2}) ").unwrap();
+    pub static ref HEADING_PATTERN: Regex = Regex::new("^h(?P<level>[1-6])(?P<attributes>.*)\\. ").unwrap();
+    pub static ref NO_TEXTILE_BLOCK_PATTERN: Regex = Regex::new("^notextile(?P<mode>\\.{1,2}) ").unwrap();
+    pub static ref PARAGRAPH_PATTERN: Regex = Regex::new("(?:^p(?P<attributes>.*)\\. )?").unwrap();
 
     pub static ref ABBREVIATION_PATTERN: Regex = Regex::new(r"^(?P<abbreviation>\p{Lu}{3,})(?:\((?P<transcript>.*?)\))?").unwrap();
     pub static ref BOLD_TEXT_PATTERN: Regex = Regex::new(r"^(?P<count1>\*+)(?P<string>.+?)(?P<count2>\*+)").unwrap();
