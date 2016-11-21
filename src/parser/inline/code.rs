@@ -23,5 +23,9 @@ mod tests {
             parse_code("@print('Hello World')@"),
             Some((Inline::Code("print('Hello World')".to_string()), 22))
         );
+        assert_eq!(
+            parse_code("@@"),
+            Some((Inline::Code("".to_string()), 2))
+        );
     }
 }

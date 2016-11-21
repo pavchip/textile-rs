@@ -117,4 +117,58 @@ mod tests {
             ))
         );
     }
+
+    #[test]
+    fn parses_multiline_block_quotation_correctly() {
+        assert_eq!(
+            parse_block_quotation(&vec!["bq.. Block quotation", "", "in multiline mode"]),
+            Some((
+                Block::BlockQuotation {
+                    attributes: Attributes::new(),
+                    elements: vec![
+                        Block::Paragraph {
+                            attributes: Attributes::new(),
+                            elements: vec![
+                                Inline::Text("Block quotation".to_string()),
+                            ],
+                            starts_with_p: false,
+                        },
+                        Block::Paragraph {
+                            attributes: Attributes::new(),
+                            elements: vec![
+                                Inline::Text("in multiline mode".to_string()),
+                            ],
+                            starts_with_p: false,
+                        },
+                    ],
+                },
+                3
+            ))
+        );
+        assert_eq!(
+            parse_block_quotation(&vec!["bq.. Block quotation", "", "in multiline mode", "", "h1. Heading"]),
+            Some((
+                Block::BlockQuotation {
+                    attributes: Attributes::new(),
+                    elements: vec![
+                        Block::Paragraph {
+                            attributes: Attributes::new(),
+                            elements: vec![
+                                Inline::Text("Block quotation".to_string()),
+                            ],
+                            starts_with_p: false,
+                        },
+                        Block::Paragraph {
+                            attributes: Attributes::new(),
+                            elements: vec![
+                                Inline::Text("in multiline mode".to_string()),
+                            ],
+                            starts_with_p: false,
+                        },
+                    ],
+                },
+                4
+            ))
+        );
+    }
 }

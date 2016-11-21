@@ -18,6 +18,9 @@
 //! assert_eq!(html, "<h1><strong>Textile markup language</strong></h1>".to_string());
 //! ```
 
+#[cfg(test)]
+#[macro_use]
+extern crate maplit;
 #[macro_use]
 extern crate lazy_static;
 extern crate regex;

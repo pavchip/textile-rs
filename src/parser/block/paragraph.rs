@@ -49,3 +49,28 @@ pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
         None
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use parser::{Attributes, Block, Inline};
+    use super::*;
+
+    #[test]
+    fn parses_paragraph_correctly() {
+        assert_eq!(
+            parse_paragraph(&vec!["p. Paragraph", "with text"]),
+            Some((
+                Block::Paragraph {
+                    attributes: Attributes::new(),
+                    elements: vec![
+                        Inline::Text("Paragraph".to_string()),
+                        Inline::Break,
+                        Inline::Text("with text".to_string()),
+                    ],
+                    starts_with_p: true,
+                },
+                2
+            ))
+        );
+    }
+}

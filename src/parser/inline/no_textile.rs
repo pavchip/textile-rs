@@ -12,3 +12,27 @@ pub fn parse_no_textile(text: &str) -> Option<(Inline, usize)> {
         None
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use parser::Inline;
+    use super::*;
+
+    #[test]
+    fn parses_no_textile_inline_element_correctly() {
+        assert_eq!(
+            parse_no_textile("==^Disabled Textile formatting^=="),
+            Some((
+                Inline::Text("^Disabled Textile formatting^".to_string()),
+                33
+            ))
+        );
+        assert_eq!(
+            parse_no_textile("===="),
+            Some((
+                Inline::Text("".to_string()),
+                4
+            ))
+        );
+    }
+}

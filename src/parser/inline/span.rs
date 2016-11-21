@@ -26,3 +26,25 @@ pub fn parse_span(text: &str) -> Option<(Inline, usize)> {
         None
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use parser::{Attributes, Inline};
+    use super::*;
+
+    #[test]
+    fn parses_span_correctly() {
+        assert_eq!(
+            parse_span("%Span element%"),
+            Some((
+                Inline::Span {
+                    attributes: Attributes::new(),
+                    elements: vec![
+                    Inline::Text("Span element".to_string()),
+                    ],
+                },
+                14
+            ))
+        );
+    }
+}

@@ -39,7 +39,7 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Inline};
+    use parser::{Attributes, Attribute, Inline};
     use super::*;
 
     #[test]
@@ -68,6 +68,23 @@ mod tests {
                     url: "http://example.com".to_string(),
                 },
                 20
+            ))
+        );
+    }
+
+    #[test]
+    fn parses_image_with_align_correctly() {
+        assert_eq!(
+            parse_image("!>http://example.com(Example image)!"),
+            Some((
+                Inline::Image {
+                    attributes: vec![
+                        Attribute::Align("right".to_string()),
+                    ],
+                    alt: "Example image".to_string(),
+                    url: "http://example.com".to_string(),
+                },
+                36
             ))
         );
     }

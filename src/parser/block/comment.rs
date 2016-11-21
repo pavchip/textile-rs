@@ -58,3 +58,36 @@ pub fn parse_comment(lines: &[&str]) -> Option<(Block, usize)> {
         None
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use parser::Block;
+    use super::*;
+
+    #[test]
+    fn parses_comment_block_correctly() {
+        assert_eq!(
+            parse_comment(&vec!["###. Comment block"]),
+            Some((
+                Block::Comment(vec!["Comment block".to_string()]),
+                1
+            ))
+        );
+    }
+
+    #[test]
+    fn parses_multiline_comment_block_correctly() {
+        assert_eq!(
+            parse_comment(&vec!["###.. Comment block", "", "in multiline mode", "", "p. Paragraph"]),
+            Some((
+                Block::Comment(vec![
+                    "Comment block".to_string(),
+                    "".to_string(),
+                    "in multiline mode".to_string(),
+                    "".to_string(),
+                ]),
+                4
+            ))
+        );
+    }
+}

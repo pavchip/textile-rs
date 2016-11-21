@@ -36,7 +36,7 @@ pub fn parse_abbreviation(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::Inline;
+    use parser::{Attributes, Inline};
     use super::*;
 
     #[test]
@@ -49,6 +49,22 @@ mod tests {
                     transcript: "Abbreviation".to_string()
                 },
                 18
+            ))
+        );
+    }
+
+    #[test]
+    fn parses_uppercase_word_correctly() {
+        assert_eq!(
+            parse_abbreviation("ABBR"),
+            Some((
+                Inline::Span {
+                    attributes: Attributes::new(),
+                    elements: vec![
+                        Inline::Text("ABBR".to_string())
+                    ],
+                },
+                4
             ))
         );
     }

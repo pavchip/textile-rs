@@ -84,4 +84,46 @@ mod tests {
             ))
         );
     }
+
+    #[test]
+    fn parses_multiline_code_block_correctly() {
+        assert_eq!(
+            parse_code_block(&vec![
+                "bc.. #include <iostream>",
+                "using namespace std",
+                "",
+                "int main() {",
+                "    cout << \"Hello, world!\" << endl;",
+                "    return 0;",
+                "}",
+            ]),
+            Some((
+                Block::CodeBlock {
+                    attributes: Attributes::new(),
+                    code: "#include <iostream>\nusing namespace std\n\nint main() {\n    cout << \"Hello, world!\" << endl;\n    return 0;\n}".to_string(),
+                },
+                7
+            ))
+        );
+        assert_eq!(
+            parse_code_block(&vec![
+                "bc.. #include <iostream>",
+                "using namespace std",
+                "",
+                "int main() {",
+                "    cout << \"Hello, world!\" << endl;",
+                "    return 0;",
+                "}",
+                "",
+                "p. Paragraph",
+            ]),
+            Some((
+                Block::CodeBlock {
+                    attributes: Attributes::new(),
+                    code: "#include <iostream>\nusing namespace std\n\nint main() {\n    cout << \"Hello, world!\" << endl;\n    return 0;\n}".to_string(),
+                },
+                8
+            ))
+        );
+    }
 }

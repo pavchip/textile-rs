@@ -58,3 +58,20 @@ pub fn parse_no_textile(lines: &[&str]) -> Option<(Block, usize)> {
         None
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use parser::Block;
+    use super::*;
+
+    #[test]
+    fn parses_no_textile_block_correclty() {
+        assert_eq!(
+            parse_no_textile(&vec!["notextile. No *Textile formatting* in this block."]),
+            Some((
+                Block::NoTextileBlock(vec!["No *Textile formatting* in this block.".to_string()]),
+                1
+            ))
+        );
+    }
+}

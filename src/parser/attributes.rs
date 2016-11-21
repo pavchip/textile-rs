@@ -104,3 +104,62 @@ fn parse_attributes(attrs_str: &str) -> (Attributes, String, HashMap<String, Str
     }
     (attrs, string, css_props)
 }
+
+#[cfg(test)]
+mod tests {
+    use parser::Attribute;
+    use super::*;
+
+    #[test]
+    fn parses_block_attributes_correctly() {
+        assert_eq!(
+            parse_block_attributes("<>)))){color: black}(my-class)"),
+            vec![
+                Attribute::Class(vec![
+                    "my-class".to_string(),
+                ]),
+                Attribute::Style(hashmap! {
+                    "text-align".to_string() => "justify".to_string(),
+                    "padding-right".to_string() => "4em".to_string(),
+                    "color".to_string() => "black".to_string(),
+                }),
+            ]
+        );
+    }
+
+    #[test]
+    fn parses_inline_attributes_correctly() {
+        assert_eq!(
+            parse_inline_attributes("(class another-class#id)[en]{font-size: 1em; background-color: #fff}"),
+            (
+                vec![
+                    Attribute::Language("en".to_string()),
+                    Attribute::Class(vec![
+                        "class".to_string(),
+                        "another-class".to_string(),
+                    ]),
+                    Attribute::Id("id".to_string()),
+                    Attribute::Style(hashmap!{
+                        "font-size".to_string() => "1em".to_string(),
+                        "background-color".to_string() => "#fff".to_string(),
+                    })
+                ],
+                "".to_string()
+            )
+        );
+        assert_eq!(
+            parse_inline_attributes("{text-align: center;}(class-name)"),
+            (
+                vec![
+                    Attribute::Class(vec![
+                        "class-name".to_string(),
+                    ]),
+                    Attribute::Style(hashmap!{
+                        "text-align".to_string() => "center".to_string(),
+                    })
+                ],
+                "".to_string()
+            )
+        );
+    }
+}
