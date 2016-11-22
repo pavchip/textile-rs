@@ -15,22 +15,6 @@ pub type Attributes = Vec<Attribute>;
 /// Block element, e.g. heading, paragraph or code block.
 #[derive(Debug, PartialEq)]
 pub enum Block {
-    /// Comment block.
-    Comment(Vec<String>),
-    /// Disable Textile formatting in a block of text.
-    NoTextileBlock(Vec<String>),
-    /// Heading, e.g. `h3. Some text`.
-    Heading {
-        attributes: Attributes,
-        elements: Vec<Inline>,
-        level: u8,
-    },
-    /// Paragraph, e.g. `p. Some text` or `Some text`.
-    Paragraph {
-        attributes: Attributes,
-        elements: Vec<Inline>,
-        starts_with_p: bool,
-    },
     /// Block quotation, e.g. `bq. Some quote`.
     BlockQuotation {
         attributes: Attributes,
@@ -41,22 +25,52 @@ pub enum Block {
         attributes: Attributes,
         code: String,
     },
+    /// Comment block.
+    Comment(Vec<String>),
+    /// Heading, e.g. `h3. Some text`.
+    Heading {
+        attributes: Attributes,
+        elements: Vec<Inline>,
+        level: u8,
+    },
+    /// Disable Textile formatting in a block of text.
+    NoTextileBlock(Vec<String>),
+    /// Paragraph, e.g. `p. Some text` or `Some text`.
+    Paragraph {
+        attributes: Attributes,
+        elements: Vec<Inline>,
+        starts_with_p: bool,
+    },
 }
 
 /// Inline element, e.g. bold text, link or image.
 #[derive(Debug, PartialEq)]
 pub enum Inline {
-    /// Line break. Converts to `<br>` tag in HTML.
-    Break,
-    /// String with text.
-    Text(String),
-    /// Code, e.g. `@puts "Hello world!"@`.
-    Code(String),
+    /// Abbreviation, e.g. `ABBR(Abbreviation)`.
+    Abbreviation {
+        abbr: String,
+        transcript: String,
+    },
     /// Bold text, e.g. `*Text*` or `**Text**`.
     Bold {
         attributes: Attributes,
         elements: Vec<Inline>,
         tag_type: BoldTagType,
+    },
+    /// Line break. Converts to `<br>` tag in HTML.
+    Break,
+    /// Citation, e.g. `??Some citation??`.
+    Citation {
+        attributes: Attributes,
+        elements: Vec<Inline>,
+    },
+    /// Code, e.g. `@puts "Hello world!"@`.
+    Code(String),
+    /// Image, e.g. `!http://example.com/image.jpg(Image)!`.
+    Image {
+        attributes: Attributes,
+        alt: String,
+        url: String,
     },
     /// Italic text, e.g. `_Text_` or `__Text__`.
     Italic {
@@ -64,13 +78,19 @@ pub enum Inline {
         tag_type: ItalicTagType,
         elements: Vec<Inline>,
     },
-    /// Strikethrough text, e.g. `-Text-`.
-    Strikethrough {
+    /// Link, e.g. `"Link":http://example.com`.
+    Link {
+        attributes: Attributes,
+        description: Vec<Inline>,
+        url: String,
+    },
+    /// Span element, e.g. `%Span text%`.
+    Span {
         attributes: Attributes,
         elements: Vec<Inline>,
     },
-    /// Underlined text, e.g. `+Text+`.
-    Underlined {
+    /// Strikethrough text, e.g. `-Text-`.
+    Strikethrough {
         attributes: Attributes,
         elements: Vec<Inline>,
     },
@@ -84,30 +104,10 @@ pub enum Inline {
         attributes: Attributes,
         elements: Vec<Inline>,
     },
-    /// Citation, e.g. `??Some citation??`.
-    Citation {
-        attributes: Attributes,
-        elements: Vec<Inline>,
-    },
-    /// Abbreviation, e.g. `ABBR(Abbreviation)`.
-    Abbreviation {
-        abbr: String,
-        transcript: String,
-    },
-    /// Link, e.g. `"Link":http://example.com`.
-    Link {
-        attributes: Attributes,
-        description: Vec<Inline>,
-        url: String,
-    },
-    /// Image, e.g. `!http://example.com/image.jpg(Image)!`.
-    Image {
-        attributes: Attributes,
-        alt: String,
-        url: String,
-    },
-    /// Span element, e.g. `%Span text%`.
-    Span {
+    /// String with text.
+    Text(String),
+    /// Underlined text, e.g. `+Text+`.
+    Underlined {
         attributes: Attributes,
         elements: Vec<Inline>,
     },
@@ -116,10 +116,10 @@ pub enum Inline {
 /// Tag type for bold text.
 #[derive(Debug, PartialEq)]
 pub enum BoldTagType {
-    /// Converts into HTML `<strong>` tag.
-    Strong,
     /// Converts into HTML `<b>` tag.
     Bold,
+    /// Converts into HTML `<strong>` tag.
+    Strong,
 }
 
 /// Tag type for italic text.

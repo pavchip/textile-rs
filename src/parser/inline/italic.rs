@@ -35,7 +35,7 @@ pub fn parse_italic_text(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Inline, ItalicTagType};
+    use parser::{Inline, ItalicTagType};
     use super::*;
 
     #[test]
@@ -44,7 +44,7 @@ mod tests {
             parse_italic_text("_Emphasis text_"),
             Some((
                 Inline::Italic {
-                    attributes: Attributes::new(),
+                    attributes: vec![],
                     elements: vec![
                         Inline::Text("Emphasis text".to_string())
                     ],
@@ -57,7 +57,7 @@ mod tests {
             parse_italic_text("__Italic text__"),
             Some((
                 Inline::Italic {
-                    attributes: Attributes::new(),
+                    attributes: vec![],
                     elements: vec![
                         Inline::Text("Italic text".to_string())
                     ],

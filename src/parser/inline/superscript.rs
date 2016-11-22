@@ -29,7 +29,7 @@ pub fn parse_superscript_text(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Inline};
+    use parser::Inline;
     use super::*;
 
     #[test]
@@ -38,9 +38,9 @@ mod tests {
             parse_superscript_text("^Superscript text^"),
             Some((
                 Inline::Superscript {
-                    attributes: Attributes::new(),
+                    attributes: vec![],
                     elements: vec![
-                        Inline::Text("Superscript text".to_string())
+                        Inline::Text("Superscript text".to_string()),
                     ],
                 },
                 18

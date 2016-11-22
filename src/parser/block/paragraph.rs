@@ -9,24 +9,20 @@ pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
         Some(value) => {
             match value {
                 0 => 1,
-                _ => value + 1
+                _ => value + 1,
             }
         }
-        None => 1
+        None => 1,
     };
     let lines = match pos {
         Some(value) => &lines[value..],
-        None => lines
+        None => lines,
     };
-    let mut strings = Vec::new();
 
     if PARAGRAPH_PATTERN.is_match(lines[0]) {
         let caps = PARAGRAPH_PATTERN.captures(lines[0]).unwrap();
-        let attributes = match caps.name("attributes") {
-            Some(string) => string,
-            None => "",
-        };
-
+        let attributes = caps.name("attributes").unwrap_or("");
+        let mut strings = Vec::new();
         strings.push(&lines[0][caps.at(0).unwrap().len()..]);
 
         for line in &lines[1..] {
@@ -41,7 +37,7 @@ pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
             Block::Paragraph {
                 attributes: parse_block_attributes(attributes),
                 elements: parse_inline_elements(&strings),
-                starts_with_p: PARAGRAPH_PATTERN.find(&lines[0]).unwrap().1 != 0
+                starts_with_p: PARAGRAPH_PATTERN.find(lines[0]).unwrap().1 != 0,
             },
             cur_line
         ))
@@ -52,16 +48,16 @@ pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Block, Inline};
+    use parser::{Block, Inline};
     use super::*;
 
     #[test]
     fn parses_paragraph_correctly() {
         assert_eq!(
-            parse_paragraph(&vec!["p. Paragraph", "with text"]),
+            parse_paragraph(&["p. Paragraph", "with text"]),
             Some((
                 Block::Paragraph {
-                    attributes: Attributes::new(),
+                    attributes: vec![],
                     elements: vec![
                         Inline::Text("Paragraph".to_string()),
                         Inline::Break,

@@ -72,17 +72,13 @@ fn parse_attributes(attrs_str: &str) -> (Attributes, String, HashMap<String, Str
 
     if CLASS_ID_PATTERN.is_match(attrs_str) {
         let caps = CLASS_ID_PATTERN.captures(attrs_str).unwrap();
-        let class = match caps.name("class") {
-            Some(value) => value,
-            None => "",
-        };
-        let id = match caps.name("id") {
-            Some(value) => value,
-            None => "",
-        }.to_string();
+        let class = caps.name("class").unwrap_or("");
+        let id = caps.name("id").unwrap_or("").to_string();
 
         if !class.is_empty() {
-            attrs.push(Attribute::Class(CLASS_STR_SPLIT_PATTERN.split(class).map(|el| el.to_string()).collect::<Vec<String>>()));
+            attrs.push(Attribute::Class(CLASS_STR_SPLIT_PATTERN.split(class)
+                .map(|el| el.to_string())
+                .collect::<Vec<String>>()));
         }
 
         if !id.is_empty() {

@@ -29,7 +29,7 @@ pub fn parse_subscript_text(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Inline};
+    use parser::Inline;
     use super::*;
 
     #[test]
@@ -38,9 +38,9 @@ mod tests {
             parse_subscript_text("~Subscript text~"),
             Some((
                 Inline::Subscript {
-                    attributes: Attributes::new(),
+                    attributes: vec![],
                     elements: vec![
-                        Inline::Text("Subscript text".to_string())
+                        Inline::Text("Subscript text".to_string()),
                     ],
                 },
                 16

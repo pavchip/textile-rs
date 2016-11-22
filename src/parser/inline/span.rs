@@ -29,7 +29,7 @@ pub fn parse_span(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Inline};
+    use parser::Inline;
     use super::*;
 
     #[test]
@@ -38,9 +38,9 @@ mod tests {
             parse_span("%Span element%"),
             Some((
                 Inline::Span {
-                    attributes: Attributes::new(),
+                    attributes: vec![],
                     elements: vec![
-                    Inline::Text("Span element".to_string()),
+                        Inline::Text("Span element".to_string()),
                     ],
                 },
                 14

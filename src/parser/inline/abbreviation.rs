@@ -5,17 +5,14 @@ pub fn parse_abbreviation(text: &str) -> Option<(Inline, usize)> {
     if ABBREVIATION_PATTERN.is_match(text) {
         let caps = ABBREVIATION_PATTERN.captures(text).unwrap();
         let abbreviation = caps.name("abbreviation").unwrap().to_string();
-        let transcript = match caps.name("transcript") {
-            Some(value) => value,
-            None => ""
-        }.to_string();
+        let transcript = caps.name("transcript").unwrap_or("").to_string();
 
         if transcript.is_empty() {
             Some((
                 Inline::Span {
                     attributes: vec![],
                     elements: vec![
-                        Inline::Text(abbreviation)
+                        Inline::Text(abbreviation),
                     ],
                 },
                 caps.at(0).unwrap().len()
@@ -24,7 +21,7 @@ pub fn parse_abbreviation(text: &str) -> Option<(Inline, usize)> {
             Some((
                 Inline::Abbreviation {
                     abbr: abbreviation,
-                    transcript: transcript
+                    transcript: transcript,
                 },
                 caps.at(0).unwrap().len()
             ))
@@ -36,7 +33,7 @@ pub fn parse_abbreviation(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Inline};
+    use parser::Inline;
     use super::*;
 
     #[test]
@@ -46,7 +43,7 @@ mod tests {
             Some((
                 Inline::Abbreviation {
                     abbr: "ABBR".to_string(),
-                    transcript: "Abbreviation".to_string()
+                    transcript: "Abbreviation".to_string(),
                 },
                 18
             ))
@@ -59,9 +56,9 @@ mod tests {
             parse_abbreviation("ABBR"),
             Some((
                 Inline::Span {
-                    attributes: Attributes::new(),
+                    attributes: vec![],
                     elements: vec![
-                        Inline::Text("ABBR".to_string())
+                        Inline::Text("ABBR".to_string()),
                     ],
                 },
                 4

@@ -14,11 +14,8 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
         }.to_string();
         let (mut attrs, text) = parse_inline_attributes(caps.name("string").unwrap());
         let image_url_alt_caps = IMAGE_URL_ALT_PATTERN.captures(&*text).unwrap();
+        let alt = image_url_alt_caps.name("alt").unwrap_or("").to_string();
         let url = image_url_alt_caps.name("url").unwrap().to_string();
-        let alt = match image_url_alt_caps.name("alt") {
-            Some(alt_text) => alt_text,
-            None => "",
-        }.to_string();
 
         if !align.is_empty() {
             attrs.push(Attribute::Align(align));
@@ -39,7 +36,7 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Attribute, Inline};
+    use parser::{Attribute, Inline};
     use super::*;
 
     #[test]
@@ -48,7 +45,7 @@ mod tests {
             parse_image("!http://example.com(Example image)!"),
             Some((
                 Inline::Image {
-                    attributes: Attributes::new(),
+                    attributes: vec![],
                     alt: "Example image".to_string(),
                     url: "http://example.com".to_string(),
                 },
@@ -63,7 +60,7 @@ mod tests {
             parse_image("!http://example.com!"),
             Some((
                 Inline::Image {
-                    attributes: Attributes::new(),
+                    attributes: vec![],
                     alt: "".to_string(),
                     url: "http://example.com".to_string(),
                 },

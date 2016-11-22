@@ -12,20 +12,20 @@ mod subscript;
 mod superscript;
 mod underlined;
 
+use parser::Inline;
 use self::abbreviation::parse_abbreviation;
 use self::bold::parse_bold_text;
+use self::citation::parse_citation;
+use self::code::parse_code;
+use self::image::parse_image;
 use self::italic::parse_italic_text;
+use self::link::parse_link;
+use self::no_textile::parse_no_textile;
+use self::span::parse_span;
 use self::strikethrough::parse_strikethrough_text;
-use self::underlined::parse_underlined_text;
 use self::subscript::parse_subscript_text;
 use self::superscript::parse_superscript_text;
-use self::code::parse_code;
-use self::citation::parse_citation;
-use self::image::parse_image;
-use self::link::parse_link;
-use self::span::parse_span;
-use self::no_textile::parse_no_textile;
-use parser::Inline;
+use self::underlined::parse_underlined_text;
 
 pub fn parse_inline_elements(lines: &[&str]) -> Vec<Inline> {
     let mut tokens = Vec::new();

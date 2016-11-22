@@ -18,12 +18,11 @@ pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
         Some(value) => &lines[value..],
         None => lines
     };
-    let mut strings = Vec::new();
 
     if HEADING_PATTERN.is_match(lines[0]) {
         let caps = HEADING_PATTERN.captures(lines[0]).unwrap();
         let level: u8 = caps.name("level").unwrap().parse().unwrap();
-
+        let mut strings = Vec::new();
         strings.push(&lines[0][caps.at(0).unwrap().len()..]);
 
         for line in &lines[1..] {
@@ -49,7 +48,7 @@ pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Block, Inline, BoldTagType, ItalicTagType};
+    use parser::{Block, Inline, BoldTagType, ItalicTagType};
     use super::*;
 
     #[test]
@@ -58,21 +57,21 @@ mod tests {
             parse_heading(&vec!["h2. *Bold text* _Italic text_"]),
             Some((
                 Block::Heading {
-                    attributes: Attributes::new(),
+                    attributes: vec![],
                     level: 2,
                     elements: vec![
                         Inline::Bold {
-                            attributes: Attributes::new(),
+                            attributes: vec![],
                             elements: vec![
-                                Inline::Text("Bold text".to_string())
+                                Inline::Text("Bold text".to_string()),
                             ],
                             tag_type: BoldTagType::Strong,
                         },
                         Inline::Text(" ".to_string()),
                         Inline::Italic {
-                            attributes: Attributes::new(),
+                            attributes: vec![],
                             elements: vec![
-                                Inline::Text("Italic text".to_string())
+                                Inline::Text("Italic text".to_string()),
                             ],
                             tag_type: ItalicTagType::Emphasis,
                         },

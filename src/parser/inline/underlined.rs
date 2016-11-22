@@ -29,7 +29,7 @@ pub fn parse_underlined_text(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Inline};
+    use parser::Inline;
     use super::*;
 
     #[test]
@@ -38,9 +38,9 @@ mod tests {
             parse_underlined_text("+Underlined text+"),
             Some((
                 Inline::Underlined {
-                    attributes: Attributes::new(),
+                    attributes: vec![],
                     elements: vec![
-                        Inline::Text("Underlined text".to_string())
+                        Inline::Text("Underlined text".to_string()),
                     ],
                 },
                 17

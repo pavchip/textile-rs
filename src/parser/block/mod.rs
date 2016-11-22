@@ -5,13 +5,13 @@ mod heading;
 mod no_textile;
 mod paragraph;
 
+use parser::Block;
 use self::block_quotation::parse_block_quotation;
 use self::code_block::parse_code_block;
 use self::comment::parse_comment;
 use self::heading::parse_heading;
 use self::no_textile::parse_no_textile;
 use self::paragraph::parse_paragraph;
-use parser::Block;
 
 pub fn parse_blocks(lines: &[&str]) -> Vec<Block> {
     let mut blocks = Vec::new();

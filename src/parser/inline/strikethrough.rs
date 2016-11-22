@@ -29,7 +29,7 @@ pub fn parse_strikethrough_text(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Inline};
+    use parser::Inline;
     use super::*;
 
     #[test]
@@ -38,9 +38,9 @@ mod tests {
             parse_strikethrough_text("-Strikethrough text-"),
             Some((
                 Inline::Strikethrough {
-                    attributes: Attributes::new(),
+                    attributes: vec![],
                     elements: vec![
-                        Inline::Text("Strikethrough text".to_string())
+                        Inline::Text("Strikethrough text".to_string()),
                     ],
                 },
                 20
