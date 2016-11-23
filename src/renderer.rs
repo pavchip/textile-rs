@@ -126,7 +126,12 @@ fn render_block(element: &Block, options: &RenderOptions) -> String {
             format!("<p{}>{}</p>",
                     render_attributes(attributes, options),
                     render_inline_elements(elements, options))
-        }
+        },
+        Block::Pre {ref attributes, ref lines} => {
+            format!("<pre{}>{}</pre>",
+                    render_attributes(attributes, options),
+                    lines.join("\n"))
+        },
         _ => "".to_string(),
     }
 }
