@@ -32,21 +32,23 @@ pub fn parse_inline_elements(lines: &[&str]) -> Vec<Inline> {
 
     for (idx, line) in lines.iter().enumerate() {
         let mut tmp = String::new();
-        let mut cur_char = 0;
+        let mut cur_byte = 0;
+        let mut it = line.char_indices();
 
-        while cur_char < line.len() {
-            match parse_inline_element(&line[cur_char..line.len()]) {
-                Some((span, consumed_chars)) => {
+        while cur_byte < line.len() {
+            match parse_inline_element(&line[cur_byte..line.len()]) {
+                Some((span, consumed_bytes)) => {
                     if !tmp.is_empty() {
                         tokens.push(Inline::Text(tmp));
                     }
                     tokens.push(span);
                     tmp = String::new();
-                    cur_char += consumed_chars;
+                    cur_byte += consumed_bytes;
                 }
                 None => {
-                    tmp.push_str(&line[cur_char..cur_char + 1]);
-                    cur_char += 1;
+                    let (_, ch) = it.find(|el| el.0 == cur_byte).unwrap();
+                    tmp.push(ch);
+                    cur_byte += ch.len_utf8();
                 }
             }
         }
