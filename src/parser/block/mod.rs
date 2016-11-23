@@ -4,6 +4,7 @@ mod comment;
 mod heading;
 mod no_textile;
 mod paragraph;
+mod pre;
 
 use parser::Block;
 use self::block_quotation::parse_block_quotation;
@@ -12,6 +13,7 @@ use self::comment::parse_comment;
 use self::heading::parse_heading;
 use self::no_textile::parse_no_textile;
 use self::paragraph::parse_paragraph;
+use self::pre::parse_pre_block;
 
 pub fn parse_blocks(lines: &[&str]) -> Vec<Block> {
     let mut blocks = Vec::new();
@@ -34,6 +36,7 @@ pub fn parse_block(lines: &[&str]) -> Option<(Block, usize)> {
             parse_comment,
             parse_heading,
             parse_no_textile,
+            parse_pre_block,
             parse_paragraph,
         ];
     }

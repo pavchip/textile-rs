@@ -41,6 +41,10 @@ pub enum Block {
         elements: Vec<Inline>,
         starts_with_p: bool,
     },
+    Pre {
+        attributes: Attributes,
+        lines: Vec<String>,
+    },
 }
 
 /// Inline element, e.g. bold text, link or image.
