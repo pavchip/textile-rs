@@ -35,20 +35,23 @@ pub fn parse_pre_block(lines: &[&str]) -> Option<(Block, usize)> {
             }
         } else {
             // Breaks parsing if line is block element.
-            for line in &lines[1..] {
+            for (idx, line) in (&lines[1..]).iter().enumerate() {
                 cur_line += 1;
-                match parse_block(&[line]) {
-                    Some((Block::Paragraph { starts_with_p, .. }, _)) => {
-                        if starts_with_p {
+
+                if lines[idx].is_empty() {
+                    match parse_block(&[line]) {
+                        Some((Block::Paragraph { starts_with_p, .. }, _)) => {
+                            if starts_with_p {
+                                cur_line -= 1;
+                                break;
+                            }
+                        }
+                        Some(_) => {
                             cur_line -= 1;
                             break;
                         }
+                        _ => {}
                     }
-                    Some(_) => {
-                        cur_line -= 1;
-                        break;
-                    }
-                    _ => {}
                 }
                 strings.push(line.to_string());
             }
