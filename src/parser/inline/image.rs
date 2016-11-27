@@ -1,6 +1,6 @@
 use parser::{Attribute, Inline};
 use parser::attributes::parse_inline_attributes;
-use parser::patterns::{IMAGE_PATTERN, IMAGE_SRC_ALT_PATTERN};
+use parser::patterns::{IMAGE_PATTERN, IMAGE_ALT_PATTERN};
 
 pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
     if IMAGE_PATTERN.is_match(text) {
@@ -13,10 +13,10 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
             _ => "",
         }.to_string();
         let href = caps.name("href").unwrap_or("").to_string();
-        let (mut attrs, text) = parse_inline_attributes(caps.name("string").unwrap());
-        let image_src_alt_caps = IMAGE_SRC_ALT_PATTERN.captures(&*text).unwrap();
-        let alt = image_src_alt_caps.name("alt").unwrap_or("").to_string();
-        let src = image_src_alt_caps.name("src").unwrap().to_string();
+        let (mut attrs, string) = parse_inline_attributes(caps.name("string").unwrap());
+        let image_alt_caps = IMAGE_ALT_PATTERN.captures(&*string).unwrap();
+        let alt = image_alt_caps.at(1).unwrap_or("").to_string();
+        let src = IMAGE_ALT_PATTERN.replace(&*string, "");
 
         if !align.is_empty() {
             attrs.push(Attribute::Align(align));

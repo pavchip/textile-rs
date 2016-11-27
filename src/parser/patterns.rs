@@ -14,7 +14,7 @@ lazy_static! {
     pub static ref CITATION_PATTERN: Regex = Regex::new(r"^\?\?(?P<string>.+?)\?\?").unwrap();
     pub static ref CODE_PATTERN: Regex = Regex::new("^@(?P<code>.*?)@").unwrap();
     pub static ref IMAGE_PATTERN: Regex = Regex::new("^!(?P<align>[<|>|=]?)(?P<string>.+?)!(?::(?P<href>[^ \\(\\)]+))?").unwrap();
-    pub static ref IMAGE_SRC_ALT_PATTERN: Regex = Regex::new("(?P<src>[^\\(\\) ]+)(?:\\((?P<alt>.+)\\))?").unwrap();
+    pub static ref IMAGE_ALT_PATTERN: Regex = Regex::new("(?:\\(([^\\(\\)]+)\\))?$").unwrap();
     pub static ref ITALIC_TEXT_PATTERN: Regex = Regex::new("^(?P<count1>_+)(?P<string>.+?)(?P<count2>_+)").unwrap();
     pub static ref LINK_PATTERN: Regex = Regex::new("^\"(?P<string>.+?)\":(?P<href>[^ \\(\\)]+)").unwrap();
     pub static ref NO_TEXTILE_INLINE_PATTERN: Regex = Regex::new("^={2}(?P<string>.*?)={2}").unwrap();
