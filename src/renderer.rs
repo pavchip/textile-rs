@@ -163,15 +163,15 @@ fn render_inline_elements(elements: &[Inline], options: &RenderOptions) -> Strin
                         render_inline_elements(elements, options))
             }
             Inline::Code(ref text) => format!("<code>{}</code>", text),
-            Inline::Image { ref attributes, ref alt, ref href, ref url } => {
+            Inline::Image { ref attributes, ref alt, ref href, ref src } => {
                 let img = if !alt.is_empty() {
                     format!("<img src=\"{0}\" alt=\"{1}\" title=\"{1}\"{2}>",
-                            url,
+                            src,
                             alt,
                             render_attributes(attributes, options))
                 } else {
                     format!("<img src=\"{}\"{}>",
-                            url,
+                            src,
                             render_attributes(attributes, options))
                 };
 

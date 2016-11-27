@@ -1,6 +1,6 @@
 use parser::{Attribute, Inline};
 use parser::attributes::parse_inline_attributes;
-use parser::patterns::{IMAGE_PATTERN, IMAGE_URL_ALT_PATTERN};
+use parser::patterns::{IMAGE_PATTERN, IMAGE_SRC_ALT_PATTERN};
 
 pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
     if IMAGE_PATTERN.is_match(text) {
@@ -14,9 +14,9 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
         }.to_string();
         let href = caps.name("href").unwrap_or("").to_string();
         let (mut attrs, text) = parse_inline_attributes(caps.name("string").unwrap());
-        let image_url_alt_caps = IMAGE_URL_ALT_PATTERN.captures(&*text).unwrap();
-        let alt = image_url_alt_caps.name("alt").unwrap_or("").to_string();
-        let url = image_url_alt_caps.name("url").unwrap().to_string();
+        let image_src_alt_caps = IMAGE_SRC_ALT_PATTERN.captures(&*text).unwrap();
+        let alt = image_src_alt_caps.name("alt").unwrap_or("").to_string();
+        let src = image_src_alt_caps.name("src").unwrap().to_string();
 
         if !align.is_empty() {
             attrs.push(Attribute::Align(align));
@@ -27,7 +27,7 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
                 attributes: attrs,
                 alt: alt,
                 href: href,
-                url: url,
+                src: src,
             },
             group_0_len
         ))
@@ -50,7 +50,7 @@ mod tests {
                     attributes: vec![],
                     alt: "Example image".to_string(),
                     href: "".to_string(),
-                    url: "http://example.com".to_string(),
+                    src: "http://example.com".to_string(),
                 },
                 35
             ))
@@ -66,7 +66,7 @@ mod tests {
                     attributes: vec![],
                     alt: "".to_string(),
                     href: "".to_string(),
-                    url: "http://example.com".to_string(),
+                    src: "http://example.com".to_string(),
                 },
                 20
             ))
@@ -84,7 +84,7 @@ mod tests {
                     ],
                     alt: "Example image".to_string(),
                     href: "".to_string(),
-                    url: "http://example.com".to_string(),
+                    src: "http://example.com".to_string(),
                 },
                 36
             ))
@@ -100,7 +100,7 @@ mod tests {
                     attributes: vec![],
                     alt: "Example image".to_string(),
                     href: "http://example.com".to_string(),
-                    url: "http://example.com/image.jpg".to_string(),
+                    src: "http://example.com/image.jpg".to_string(),
                 },
                 64
             ))

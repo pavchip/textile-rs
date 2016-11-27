@@ -75,7 +75,7 @@ pub enum Inline {
         attributes: Attributes,
         alt: String,
         href: String,
-        url: String,
+        src: String,
     },
     /// Italic text, e.g. `_Text_` or `__Text__`.
     Italic {
