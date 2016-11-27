@@ -74,6 +74,7 @@ pub enum Inline {
     Image {
         attributes: Attributes,
         alt: String,
+        href: String,
         url: String,
     },
     /// Italic text, e.g. `_Text_` or `__Text__`.

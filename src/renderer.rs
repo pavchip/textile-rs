@@ -163,8 +163,8 @@ fn render_inline_elements(elements: &[Inline], options: &RenderOptions) -> Strin
                         render_inline_elements(elements, options))
             }
             Inline::Code(ref text) => format!("<code>{}</code>", text),
-            Inline::Image { ref attributes, ref alt, ref url } => {
-                if !alt.is_empty() {
+            Inline::Image { ref attributes, ref alt, ref href, ref url } => {
+                let img = if !alt.is_empty() {
                     format!("<img src=\"{0}\" alt=\"{1}\" title=\"{1}\"{2}>",
                             url,
                             alt,
@@ -173,6 +173,12 @@ fn render_inline_elements(elements: &[Inline], options: &RenderOptions) -> Strin
                     format!("<img src=\"{}\"{}>",
                             url,
                             render_attributes(attributes, options))
+                };
+
+                if !href.is_empty() {
+                    format!("<a href=\"{}\">{}</a>", href, img)
+                } else {
+                    img
                 }
             }
             Inline::Italic { ref attributes, ref elements, ref tag_type } => {

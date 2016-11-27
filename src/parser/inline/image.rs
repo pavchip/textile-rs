@@ -12,6 +12,7 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
             ">" => "right",
             _ => "",
         }.to_string();
+        let href = caps.name("href").unwrap_or("").to_string();
         let (mut attrs, text) = parse_inline_attributes(caps.name("string").unwrap());
         let image_url_alt_caps = IMAGE_URL_ALT_PATTERN.captures(&*text).unwrap();
         let alt = image_url_alt_caps.name("alt").unwrap_or("").to_string();
@@ -25,6 +26,7 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
             Inline::Image {
                 attributes: attrs,
                 alt: alt,
+                href: href,
                 url: url,
             },
             group_0_len
@@ -47,6 +49,7 @@ mod tests {
                 Inline::Image {
                     attributes: vec![],
                     alt: "Example image".to_string(),
+                    href: "".to_string(),
                     url: "http://example.com".to_string(),
                 },
                 35
@@ -62,6 +65,7 @@ mod tests {
                 Inline::Image {
                     attributes: vec![],
                     alt: "".to_string(),
+                    href: "".to_string(),
                     url: "http://example.com".to_string(),
                 },
                 20
@@ -79,9 +83,26 @@ mod tests {
                         Attribute::Align("right".to_string()),
                     ],
                     alt: "Example image".to_string(),
+                    href: "".to_string(),
                     url: "http://example.com".to_string(),
                 },
                 36
+            ))
+        );
+    }
+
+    #[test]
+    fn parses_image_with_link_correctly() {
+        assert_eq!(
+            parse_image("!http://example.com/image.jpg(Example image)!:http://example.com"),
+            Some((
+                Inline::Image {
+                    attributes: vec![],
+                    alt: "Example image".to_string(),
+                    href: "http://example.com".to_string(),
+                    url: "http://example.com/image.jpg".to_string(),
+                },
+                64
             ))
         );
     }
