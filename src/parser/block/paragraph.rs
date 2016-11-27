@@ -18,11 +18,12 @@ pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
         Some(value) => &lines[value..],
         None => lines,
     };
+    let mut attributes = "";
+    let mut strings = Vec::new();
 
     if PARAGRAPH_PATTERN.is_match(lines[0]) {
         let caps = PARAGRAPH_PATTERN.captures(lines[0]).unwrap();
-        let attributes = caps.name("attributes").unwrap_or("");
-        let mut strings = Vec::new();
+        attributes = caps.name("attributes").unwrap_or("");
         strings.push(&lines[0][caps.at(0).unwrap().len()..]);
 
         for line in &lines[1..] {
@@ -32,18 +33,15 @@ pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
             }
             strings.push(line);
         }
-
-        Some((
-            Block::Paragraph {
-                attributes: parse_block_attributes(attributes),
-                elements: parse_inline_elements(&strings),
-                starts_with_p: PARAGRAPH_PATTERN.find(lines[0]).unwrap().1 != 0,
-            },
-            cur_line
-        ))
-    } else {
-        None
     }
+    Some((
+        Block::Paragraph {
+            attributes: parse_block_attributes(attributes),
+            elements: parse_inline_elements(&strings),
+            starts_with_p: PARAGRAPH_PATTERN.find(lines[0]).unwrap().1 != 0,
+        },
+        cur_line
+    ))
 }
 
 #[cfg(test)]
