@@ -191,9 +191,9 @@ fn render_inline_elements(elements: &[Inline], options: &RenderOptions) -> Strin
                         render_attributes(attributes, options),
                         render_inline_elements(elements, options))
             }
-            Inline::Link { ref attributes, ref description, ref url } => {
+            Inline::Link { ref attributes, ref description, ref href } => {
                 format!("<a href=\"{}\"{}>{}</a>",
-                        url,
+                        href,
                         render_attributes(attributes, options),
                         render_inline_elements(description, options))
             }

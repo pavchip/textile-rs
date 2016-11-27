@@ -7,13 +7,13 @@ pub fn parse_link(text: &str) -> Option<(Inline, usize)> {
     if LINK_PATTERN.is_match(text) {
         let caps = LINK_PATTERN.captures(text).unwrap();
         let (attrs, text) = parse_inline_attributes(caps.name("string").unwrap());
-        let url = caps.name("url").unwrap().to_string();
+        let href = caps.name("href").unwrap().to_string();
 
         Some((
             Inline::Link {
                 attributes: attrs,
                 description: parse_inline_elements(&[&*text]),
-                url: url,
+                href: href,
             },
             caps.at(0).unwrap().len()
         ))
@@ -43,7 +43,7 @@ mod tests {
                             tag_type: ItalicTagType::Emphasis,
                         }
                     ],
-                    url: "http://example.com".to_string(),
+                    href: "http://example.com".to_string(),
                 },
                 27
             ))
