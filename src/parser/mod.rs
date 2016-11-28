@@ -88,6 +88,7 @@ pub enum Inline {
         attributes: Attributes,
         description: Vec<Inline>,
         href: String,
+        title: String,
     },
     /// Span element, e.g. `%Span text%`.
     Span {

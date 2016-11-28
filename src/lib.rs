@@ -24,6 +24,7 @@ extern crate maplit;
 #[macro_use]
 extern crate lazy_static;
 extern crate regex;
+extern crate url;
 
 mod into_string;
 pub mod parser;

@@ -191,11 +191,19 @@ fn render_inline_elements(elements: &[Inline], options: &RenderOptions) -> Strin
                         render_attributes(attributes, options),
                         render_inline_elements(elements, options))
             }
-            Inline::Link { ref attributes, ref description, ref href } => {
-                format!("<a href=\"{}\"{}>{}</a>",
-                        href,
-                        render_attributes(attributes, options),
-                        render_inline_elements(description, options))
+            Inline::Link { ref attributes, ref description, ref href, ref title } => {
+                if !title.is_empty() {
+                    format!("<a href=\"{}\" title=\"{}\"{}>{}</a>",
+                            href,
+                            title,
+                            render_attributes(attributes, options),
+                            render_inline_elements(description, options))
+                } else {
+                    format!("<a href=\"{}\"{}>{}</a>",
+                            href,
+                            render_attributes(attributes, options),
+                            render_inline_elements(description, options))
+                }
             }
             Inline::Span { ref attributes, ref elements } => {
                 format!("<span{}>{}</span>",

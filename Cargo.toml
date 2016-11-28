@@ -12,6 +12,7 @@ description = "Native Rust crate for parsing and rendering into HTML the Textile
 [dependencies]
 regex = "0.1.80"
 lazy_static = "0.2.2"
+url = "1.2.3"
 
 [dev-dependencies]
 maplit = "0.1.4"
