@@ -34,7 +34,7 @@ pub enum Block {
         elements: Vec<Inline>,
         level: u8,
     },
-    /// Disable Textile formatting in a block of text.
+    /// In this block the Textile formatting is disabled.
     NoTextileBlock(Vec<String>),
     /// Paragraph, e.g. `p. Some text` or `Some text`.
     Paragraph {
@@ -42,6 +42,7 @@ pub enum Block {
         elements: Vec<Inline>,
         starts_with_p: bool,
     },
+    /// Pre-formatted text, e.g. `pre. *Some text*`
     Pre {
         attributes: Attributes,
         lines: Vec<String>,
