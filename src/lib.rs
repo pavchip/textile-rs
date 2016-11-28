@@ -6,7 +6,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! textile = "0.1.0"
+//! textile = "*"
 //! ```
 //!
 //! # Usage
