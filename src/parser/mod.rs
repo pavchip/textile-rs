@@ -81,8 +81,8 @@ pub enum Inline {
     /// Italic text, e.g. `_Text_` or `__Text__`.
     Italic {
         attributes: Attributes,
-        tag_type: ItalicTagType,
         elements: Vec<Inline>,
+        tag_type: ItalicTagType,
     },
     /// Link, e.g. `"Link":http://example.com`.
     Link {
