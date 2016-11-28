@@ -9,6 +9,10 @@ use into_string::*;
 use parser::block::parse_blocks;
 use std::collections::HashMap;
 
+/// Vector of block elements.
+pub type BlockElements = Vec<Block>;
+/// Vector of inline elements.
+pub type InlineElements = Vec<Inline>;
 /// Vector of Textile attributes, e.g. classes, ID's or CSS styles.
 pub type Attributes = Vec<Attribute>;
 
@@ -19,7 +23,7 @@ pub enum Block {
     BlockQuotation {
         attributes: Attributes,
         cite: String,
-        elements: Vec<Block>,
+        elements: BlockElements,
     },
     /// Code block, e.g. `bc. print("Hello World")`.
     CodeBlock {
@@ -31,7 +35,7 @@ pub enum Block {
     /// Heading, e.g. `h3. Some text`.
     Heading {
         attributes: Attributes,
-        elements: Vec<Inline>,
+        elements: InlineElements,
         level: u8,
     },
     /// In this block the Textile formatting is disabled.
@@ -39,7 +43,7 @@ pub enum Block {
     /// Paragraph, e.g. `p. Some text` or `Some text`.
     Paragraph {
         attributes: Attributes,
-        elements: Vec<Inline>,
+        elements: InlineElements,
         starts_with_p: bool,
     },
     /// Pre-formatted text, e.g. `pre. *Some text*`
@@ -60,7 +64,7 @@ pub enum Inline {
     /// Bold text, e.g. `*Text*` or `**Text**`.
     Bold {
         attributes: Attributes,
-        elements: Vec<Inline>,
+        elements: InlineElements,
         tag_type: BoldTagType,
     },
     /// Line break. Converts to `<br>` tag in HTML.
@@ -68,7 +72,7 @@ pub enum Inline {
     /// Citation, e.g. `??Some citation??`.
     Citation {
         attributes: Attributes,
-        elements: Vec<Inline>,
+        elements: InlineElements,
     },
     /// Code, e.g. `@puts "Hello world!"@`.
     Code(String),
@@ -82,42 +86,42 @@ pub enum Inline {
     /// Italic text, e.g. `_Text_` or `__Text__`.
     Italic {
         attributes: Attributes,
-        elements: Vec<Inline>,
+        elements: InlineElements,
         tag_type: ItalicTagType,
     },
     /// Link, e.g. `"Link":http://example.com`.
     Link {
         attributes: Attributes,
-        elements: Vec<Inline>,
+        elements: InlineElements,
         href: String,
         title: String,
     },
     /// Span element, e.g. `%Span text%`.
     Span {
         attributes: Attributes,
-        elements: Vec<Inline>,
+        elements: InlineElements,
     },
     /// Strikethrough text, e.g. `-Text-`.
     Strikethrough {
         attributes: Attributes,
-        elements: Vec<Inline>,
+        elements: InlineElements,
     },
     /// Subscript text, e.g. `~Text~`.
     Subscript {
         attributes: Attributes,
-        elements: Vec<Inline>,
+        elements: InlineElements,
     },
     /// Superscript text, e.g. `^Text^`.
     Superscript {
         attributes: Attributes,
-        elements: Vec<Inline>,
+        elements: InlineElements,
     },
     /// String with text.
     Text(String),
     /// Underlined text, e.g. `+Text+`.
     Underlined {
         attributes: Attributes,
-        elements: Vec<Inline>,
+        elements: InlineElements,
     },
 }
 
@@ -179,6 +183,6 @@ pub enum Attribute {
 ///     }
 /// ]);
 /// ```
-pub fn parse<S: IntoString>(text: S) -> Vec<Block> {
+pub fn parse<S: IntoString>(text: S) -> BlockElements {
     parse_blocks(&text.into_string().lines().collect::<Vec<&str>>())
 }

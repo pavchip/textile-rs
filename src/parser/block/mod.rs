@@ -6,7 +6,7 @@ mod no_textile;
 mod paragraph;
 mod pre;
 
-use parser::Block;
+use parser::{BlockElements, Block};
 use self::block_quotation::parse_block_quotation;
 use self::code_block::parse_code_block;
 use self::comment::parse_comment;
@@ -15,7 +15,7 @@ use self::no_textile::parse_no_textile;
 use self::paragraph::parse_paragraph;
 use self::pre::parse_pre_block;
 
-pub fn parse_blocks(lines: &[&str]) -> Vec<Block> {
+pub fn parse_blocks(lines: &[&str]) -> BlockElements {
     let mut blocks = Vec::new();
     let mut cur_line = 0;
 

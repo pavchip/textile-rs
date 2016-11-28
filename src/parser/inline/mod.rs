@@ -12,7 +12,7 @@ mod subscript;
 mod superscript;
 mod underlined;
 
-use parser::Inline;
+use parser::{InlineElements, Inline};
 use self::abbreviation::parse_abbreviation;
 use self::bold::parse_bold_text;
 use self::citation::parse_citation;
@@ -27,8 +27,8 @@ use self::subscript::parse_subscript_text;
 use self::superscript::parse_superscript_text;
 use self::underlined::parse_underlined_text;
 
-pub fn parse_inline_elements(lines: &[&str]) -> Vec<Inline> {
-    let mut tokens = Vec::new();
+pub fn parse_inline_elements(lines: &[&str]) -> InlineElements {
+    let mut tokens = InlineElements::new();
 
     for (idx, line) in lines.iter().enumerate() {
         let mut tmp = String::new();
