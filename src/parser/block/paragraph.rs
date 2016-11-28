@@ -4,20 +4,7 @@ use parser::inline::parse_inline_elements;
 use parser::patterns::PARAGRAPH_PATTERN;
 
 pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
-    let pos = lines.iter().position(|el| !el.is_empty());
-    let mut cur_line = match pos {
-        Some(value) => {
-            match value {
-                0 => 1,
-                _ => value + 1,
-            }
-        }
-        None => 1,
-    };
-    let lines = match pos {
-        Some(value) => &lines[value..],
-        None => lines,
-    };
+    let mut cur_line = 1;
     let mut attributes = "";
     let mut strings = Vec::new();
 

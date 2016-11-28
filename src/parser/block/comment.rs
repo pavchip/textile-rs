@@ -3,20 +3,7 @@ use parser::block::parse_block;
 use parser::patterns::COMMENT_PATTERN;
 
 pub fn parse_comment(lines: &[&str]) -> Option<(Block, usize)> {
-    let pos = lines.iter().position(|el| !el.is_empty());
-    let mut cur_line = match pos {
-        Some(value) => {
-            match value {
-                0 => 1,
-                _ => value + 1,
-            }
-        }
-        None => 1,
-    };
-    let lines = match pos {
-        Some(value) => &lines[value..],
-        None => lines,
-    };
+    let mut cur_line = 1;
 
     if COMMENT_PATTERN.is_match(lines[0]) {
         let caps = COMMENT_PATTERN.captures(lines[0]).unwrap();

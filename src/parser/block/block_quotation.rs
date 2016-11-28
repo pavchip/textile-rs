@@ -6,20 +6,7 @@ use parser::inline::parse_inline_elements;
 use parser::patterns::BLOCK_QUOTATION_PATTERN;
 
 pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
-    let pos = lines.iter().position(|el| !el.is_empty());
-    let mut cur_line = match pos {
-        Some(value) => {
-            match value {
-                0 => 1,
-                _ => value + 1,
-            }
-        }
-        None => 1,
-    };
-    let lines = match pos {
-        Some(value) => &lines[value..],
-        None => lines,
-    };
+    let mut cur_line = 1;
 
     if BLOCK_QUOTATION_PATTERN.is_match(lines[0]) {
         let caps = BLOCK_QUOTATION_PATTERN.captures(lines[0]).unwrap();

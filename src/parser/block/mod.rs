@@ -40,6 +40,12 @@ pub fn parse_block(lines: &[&str]) -> Option<(Block, usize)> {
             parse_paragraph,
         ];
     }
+    // Get index of non-empty string.
+    let pos = lines.iter().position(|el| !el.is_empty());
+    let lines = match pos {
+        Some(value) => &lines[value..],
+        None => lines,
+    };
 
     for f in FNS.iter() {
         let res = f(lines);
