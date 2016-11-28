@@ -93,7 +93,13 @@ fn render_blocks(elements: &[Block], options: &RenderOptions) -> String {
 
 fn render_block(element: &Block, options: &RenderOptions) -> String {
     match *element {
-        Block::BlockQuotation { ref attributes, ref elements } => {
+        Block::BlockQuotation { ref attributes, ref cite, ref elements } => {
+            let cite_attr = if !cite.is_empty() {
+                format!(" cite=\"{}\"", cite)
+            } else {
+                "".to_string()
+            };
+
             if !options.compress {
                 let mut res = String::new();
                 let spaces: String = iter::repeat(" ").take(options.indent as usize).collect();
@@ -101,12 +107,14 @@ fn render_block(element: &Block, options: &RenderOptions) -> String {
                 for element in elements {
                     res.push_str(&*format!("\n{}{}", spaces, render_block(element, options)));
                 }
-                format!("<blockquote{}>{}\n</blockquote>",
+                format!("<blockquote{}{}>{}\n</blockquote>",
                         render_attributes(attributes, options),
+                        cite_attr,
                         res)
             } else {
-                format!("<blockquote{}>{}</blockquote>",
+                format!("<blockquote{}{}>{}</blockquote>",
                         render_attributes(attributes, options),
+                        cite_attr,
                         render_blocks(elements, options))
             }
         }

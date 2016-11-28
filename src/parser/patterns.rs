@@ -1,7 +1,7 @@
 use regex::Regex;
 
 lazy_static! {
-    pub static ref BLOCK_QUOTATION_PATTERN: Regex = Regex::new("^bq(?P<attributes>.*?)(?P<mode>\\.{1,2}) ").unwrap();
+    pub static ref BLOCK_QUOTATION_PATTERN: Regex = Regex::new("^bq(?P<attributes>.*?)(?P<mode>\\.{1,2})(?::(?P<cite>.+?))? ").unwrap();
     pub static ref CODE_BLOCK_PATTERN: Regex = Regex::new("^bc(?P<attributes>.*?)(?P<mode>\\.{1,2}) ").unwrap();
     pub static ref COMMENT_PATTERN: Regex = Regex::new("^#{3}(?P<mode>\\.{1,2}) ").unwrap();
     pub static ref HEADING_PATTERN: Regex = Regex::new("^h(?P<level>[1-6])(?P<attributes>.*)\\. ").unwrap();

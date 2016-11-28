@@ -18,6 +18,7 @@ pub enum Block {
     /// Block quotation, e.g. `bq. Some quote`.
     BlockQuotation {
         attributes: Attributes,
+        cite: String,
         elements: Vec<Block>,
     },
     /// Code block, e.g. `bc. print("Hello World")`.

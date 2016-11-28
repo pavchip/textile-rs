@@ -23,6 +23,7 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
 
     if BLOCK_QUOTATION_PATTERN.is_match(lines[0]) {
         let caps = BLOCK_QUOTATION_PATTERN.captures(lines[0]).unwrap();
+        let cite = caps.name("cite").unwrap_or("").to_string();
         let attrs = parse_block_attributes(caps.name("attributes").unwrap());
         let mut blocks = Vec::new();
         let mut strings = Vec::new();
@@ -80,6 +81,7 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
         Some((
             Block::BlockQuotation {
                 attributes: attrs.clone(),
+                cite: cite,
                 elements: blocks,
             },
             cur_line
@@ -101,6 +103,7 @@ mod tests {
             Some((
                 Block::BlockQuotation {
                     attributes: vec![],
+                    cite: "".to_string(),
                     elements: vec![
                         Block::Paragraph {
                             attributes: vec![],
@@ -129,6 +132,7 @@ mod tests {
             Some((
                 Block::BlockQuotation {
                     attributes: vec![],
+                    cite: "".to_string(),
                     elements: vec![
                         Block::Paragraph {
                             attributes: vec![],
@@ -154,6 +158,7 @@ mod tests {
             Some((
                 Block::BlockQuotation {
                     attributes: vec![],
+                    cite: "".to_string(),
                     elements: vec![
                         Block::Paragraph {
                             attributes: vec![],
@@ -172,6 +177,29 @@ mod tests {
                     ],
                 },
                 4
+            ))
+        );
+    }
+
+    #[test]
+    fn parses_block_quotation_with_cite_correctly() {
+        assert_eq!(
+            parse_block_quotation(&["bq.:http://example.com Block quotation"]),
+            Some((
+                Block::BlockQuotation {
+                    attributes: vec![],
+                    cite: "http://example.com".to_string(),
+                    elements: vec![
+                        Block::Paragraph {
+                            attributes: vec![],
+                            elements: vec![
+                                Inline::Text("Block quotation".to_string()),
+                            ],
+                            starts_with_p: false,
+                        },
+                    ],
+                },
+                1
             ))
         );
     }
