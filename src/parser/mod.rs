@@ -86,7 +86,7 @@ pub enum Inline {
     /// Link, e.g. `"Link":http://example.com`.
     Link {
         attributes: Attributes,
-        description: Vec<Inline>,
+        elements: Vec<Inline>,
         href: String,
         title: String,
     },

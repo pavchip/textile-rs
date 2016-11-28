@@ -11,7 +11,7 @@ pub fn parse_link(text: &str) -> Option<(Inline, usize)> {
         let href = caps.name("href").unwrap().to_string();
         let title = LINK_TITLE_PATTERN.captures(&*string).unwrap().at(1).unwrap_or("").to_string();
         string = LINK_TITLE_PATTERN.replace(&*string, "");
-        let description = if string != "$" {
+        let elements = if string != "$" {
             parse_inline_elements(&[&*string])
         } else {
             let desc = match Url::parse(&*href) {
@@ -38,7 +38,7 @@ pub fn parse_link(text: &str) -> Option<(Inline, usize)> {
         Some((
             Inline::Link {
                 attributes: attrs,
-                description: description,
+                elements: elements,
                 href: href,
                 title: title,
             },
@@ -61,7 +61,7 @@ mod tests {
             Some((
                 Inline::Link {
                     attributes: vec![],
-                    description: vec![
+                    elements: vec![
                         Inline::Italic {
                             attributes: vec![],
                             elements: vec![
@@ -85,7 +85,7 @@ mod tests {
             Some((
                 Inline::Link {
                     attributes: vec![],
-                    description: vec![
+                    elements: vec![
                         Inline::Text("Link".to_string()),
                     ],
                     href: "http://example.com".to_string(),
@@ -103,7 +103,7 @@ mod tests {
             Some((
                 Inline::Link {
                     attributes: vec![],
-                    description: vec![
+                    elements: vec![
                         Inline::Text("example.com".to_string()),
                     ],
                     href: "http://example.com".to_string(),
@@ -117,7 +117,7 @@ mod tests {
             Some((
                 Inline::Link {
                     attributes: vec![],
-                    description: vec![
+                    elements: vec![
                         Inline::Text("user@example.com".to_string()),
                     ],
                     href: "mailto:user@example.com".to_string(),
