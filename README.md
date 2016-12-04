@@ -5,7 +5,7 @@
 
 Native Rust crate for parsing and rendering into HTML the Textile markup language.
 
-[Documentation](https://docs.rs/textile/0.2.0/textile/)
+[Documentation](https://docs.rs/textile/0.2.1/textile/)
 
 ## Installation
 
