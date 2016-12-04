@@ -65,9 +65,9 @@ fn render_attributes(attributes: &[Attribute], options: &RenderOptions) -> Strin
                     }
 
                     if !options.compress {
-                        format!("style=\"{}\"", res.join(";"))
-                    } else {
                         format!("style=\"{}\"", res.join("; "))
+                    } else {
+                        format!("style=\"{}\"", res.join(";"))
                     }
                 }
             };
