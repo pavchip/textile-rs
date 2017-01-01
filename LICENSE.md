@@ -1,7 +1,7 @@
 The MIT License (MIT)
 =====================
 
-Copyright © 2016 Pavel Chistyakov
+Copyright © 2016-2017 Pavel Chistyakov
 
 Permission is hereby granted, free of charge, to any person
 obtaining a copy of this software and associated documentation
