@@ -2,6 +2,7 @@ mod block_quotation;
 mod code_block;
 mod comment;
 mod heading;
+mod list;
 mod no_textile;
 mod paragraph;
 mod pre;
@@ -11,6 +12,7 @@ use self::block_quotation::parse_block_quotation;
 use self::code_block::parse_code_block;
 use self::comment::parse_comment;
 use self::heading::parse_heading;
+use self::list::parse_list;
 use self::no_textile::parse_no_textile;
 use self::paragraph::parse_paragraph;
 use self::pre::parse_pre_block;
@@ -35,6 +37,7 @@ pub fn parse_block(lines: &[&str]) -> Option<(Block, usize)> {
             parse_code_block,
             parse_comment,
             parse_heading,
+            parse_list,
             parse_no_textile,
             parse_pre_block,
             parse_paragraph,

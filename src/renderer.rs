@@ -130,6 +130,35 @@ fn render_block(element: &Block, options: &RenderOptions) -> String {
                     render_inline_elements(elements, options))
         }
         Block::NoTextileBlock(ref strings) => strings.join("\n"),
+        Block::OrderedList { ref attributes, ref elements, level, start } => {
+            let mut res = String::new();
+            let start_attr = match start {
+                Some(val) => format!(" start=\"{}\"", val),
+                None => "".to_string(),
+            };
+            let list_item_indent: String = iter::repeat(" ").take((options.indent * (level + 1)) as usize).collect();
+            let list_indent: String = iter::repeat(" ").take((options.indent * level) as usize).collect();
+
+            for element in elements {
+                let html = match *element {
+                    ListElement::ListItem { ref attributes, ref elements } => {
+                        format!("\n{}<li{}>{}</li>",
+                                list_item_indent,
+                                render_attributes(attributes, options),
+                                render_inline_elements(elements, options))
+                    },
+                    ListElement::List(ref list) => {
+                        format!("\n{}", render_block(list, options))
+                    }
+                };
+                res.push_str(&html);
+            }
+            format!("{0}<ol{1}{2}>{3}\n{0}</ol>",
+                    list_indent,
+                    render_attributes(attributes, options),
+                    start_attr,
+                    res)
+        },
         Block::Paragraph { ref attributes, ref elements, .. } => {
             format!("<p{}>{}</p>",
                     render_attributes(attributes, options),
@@ -139,6 +168,30 @@ fn render_block(element: &Block, options: &RenderOptions) -> String {
             format!("<pre{}>{}</pre>",
                     render_attributes(attributes, options),
                     lines.join("\n"))
+        },
+        Block::UnorderedList { ref attributes, ref elements, level } => {
+            let mut res = String::new();
+            let list_item_indent: String = iter::repeat(" ").take((options.indent * (level + 1)) as usize).collect();
+            let list_indent: String = iter::repeat(" ").take((options.indent * level) as usize).collect();
+
+            for element in elements {
+                let html = match *element {
+                    ListElement::ListItem { ref attributes, ref elements } => {
+                        format!("\n{}<li{}>{}</li>",
+                                list_item_indent,
+                                render_attributes(attributes, options),
+                                render_inline_elements(elements, options))
+                    },
+                    ListElement::List(ref list) => {
+                        format!("\n{}", render_block(list, options))
+                    }
+                };
+                res.push_str(&html);
+            }
+            format!("{0}<ul{1}>{2}\n{0}</ul>",
+                    list_indent,
+                    render_attributes(attributes, options),
+                    res)
         },
         _ => "".to_string(),
     }

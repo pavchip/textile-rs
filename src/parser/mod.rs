@@ -40,17 +40,29 @@ pub enum Block {
     },
     /// In this block the Textile formatting is disabled.
     NoTextileBlock(Vec<String>),
+    OrderedList {
+        attributes: Attributes,
+        elements: Vec<ListElement>,
+        level: u8,
+        start: Option<u8>,
+    },
     /// Paragraph, e.g. `p. Some text` or `Some text`.
     Paragraph {
         attributes: Attributes,
         elements: InlineElements,
         starts_with_p: bool,
     },
-    /// Pre-formatted text, e.g. `pre. *Some text*`
+    /// Pre-formatted text, e.g. `pre. *Some text*`.
     Pre {
         attributes: Attributes,
         lines: Vec<String>,
     },
+    /// Unordered list, e.g. `* List item`.
+    UnorderedList {
+        attributes: Attributes,
+        elements: Vec<ListElement>,
+        level: u8,
+    }
 }
 
 /// Inline element, e.g. bold text, link or image.
@@ -156,6 +168,15 @@ pub enum Attribute {
     Language(String),
     /// CSS styles. Converts into HTML `style` attribute.
     Style(HashMap<String, String>)
+}
+
+#[derive(Debug, PartialEq)]
+pub enum ListElement {
+    ListItem {
+        attributes: Attributes,
+        elements: InlineElements,
+    },
+    List(Block),
 }
 
 /// Splits text into tokens. Accepts `&str`, `String` or `Path` data type. Returns vector of block elements.

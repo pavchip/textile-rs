@@ -18,6 +18,8 @@
 //! assert_eq!(html, "<h1><strong>Textile markup language</strong></h1>".to_string());
 //! ```
 
+#![recursion_limit="100"]
+
 #[cfg(test)]
 #[macro_use]
 extern crate maplit;
