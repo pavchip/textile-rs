@@ -49,8 +49,8 @@ assert_eq!(html, "<h1><strong>Textile markup language</strong></h1>".to_string()
   + [x] Span element
   + [x] Disable Textile formatting inline element
 + [ ] Lists
-  + [ ] Bulleted list
-  + [ ] Numbered list
+  + [x] Bulleted list
+  + [x] Numbered list
   + [ ] Definition list
   + [ ] Footnotes
 + [ ] Tables
