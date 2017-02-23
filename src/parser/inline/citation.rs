@@ -22,7 +22,7 @@ pub fn parse_citation(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::Inline;
+    use parser::{Attributes, Inline};
     use super::*;
 
     #[test]
@@ -31,7 +31,7 @@ mod tests {
             parse_citation("??Textile citation element??"),
             Some((
                 Inline::Citation {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     elements: vec![
                         Inline::Text("Textile citation element".to_string()),
                     ],

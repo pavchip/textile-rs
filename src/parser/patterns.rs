@@ -32,7 +32,6 @@ lazy_static! {
     pub static ref ALIGN_PATTERN: Regex = Regex::new("[<|>|=]{1,2}").unwrap();
     pub static ref LANG_PATTERN: Regex = Regex::new("\\[([A-Za-z]{2}(?:-[A-Za-z]{2})?)\\]").unwrap();
     pub static ref CLASS_ID_PATTERN: Regex = Regex::new("\\((?P<class>[\\w-_\\. ]+)?(?:#(?P<id>[\\w-_]+))?\\)").unwrap();
-    pub static ref CLASS_STR_SPLIT_PATTERN: Regex = Regex::new(" +").unwrap();
     pub static ref CSS_PROPS_PATTERN: Regex = Regex::new("\\{([^\\{\\}]+)\\}").unwrap();
     pub static ref CSS_PROPS_SPLIT_PATTERN: Regex = Regex::new("; *").unwrap();
     pub static ref CSS_PROP_STR_PATTERN: Regex = Regex::new("(?P<key>[a-z-_]+): *(?P<value>.+)").unwrap();

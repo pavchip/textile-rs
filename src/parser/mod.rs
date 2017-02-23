@@ -14,7 +14,7 @@ pub type BlockElements = Vec<Block>;
 /// Vector of inline elements.
 pub type InlineElements = Vec<Inline>;
 /// Vector of Textile attributes, e.g. classes, ID's or CSS styles.
-pub type Attributes = Vec<Attribute>;
+pub type Attributes = HashMap<String, String>;
 
 /// Block element, e.g. heading, paragraph or code block.
 #[derive(Debug, PartialEq)]
@@ -91,6 +91,7 @@ pub enum Inline {
     /// Image, e.g. `!http://example.com/image.jpg(Image)!`.
     Image {
         attributes: Attributes,
+        align: String,
         alt: String,
         href: String,
         src: String,
@@ -155,21 +156,6 @@ pub enum ItalicTagType {
     Italic,
 }
 
-/// Textile attribute.
-#[derive(Debug, Clone, PartialEq)]
-pub enum Attribute {
-    /// Image align. Convertes into HTML `align` attribute.
-    Align(String),
-    /// Vector of HTML classes. Converts into HTML `class` attribute.
-    Class(Vec<String>),
-    /// Converts into HTML `id` attribute.
-    Id(String),
-    /// Converts into HTML `lang` attribute.
-    Language(String),
-    /// CSS styles. Converts into HTML `style` attribute.
-    Style(HashMap<String, String>)
-}
-
 #[derive(Debug, PartialEq)]
 pub enum ListElement {
     ListItem {
@@ -189,10 +175,10 @@ pub enum ListElement {
 /// let text = "h1. _String with text_.";
 /// assert_eq!(parse(text), vec![
 ///     Block::Heading {
-///         attributes: vec![],
+///         attributes: Attributes::new(),
 ///         elements: vec![
 ///             Inline::Italic {
-///                 attributes: vec![],
+///                 attributes: Attributes::new(),
 ///                 tag_type: ItalicTagType::Emphasis,
 ///                 elements: vec![
 ///                     Inline::Text("String with text".to_string())

@@ -80,7 +80,7 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Block, Inline, BoldTagType};
+    use parser::{Attributes, Block, Inline, BoldTagType};
     use super::*;
 
     #[test]
@@ -89,14 +89,14 @@ mod tests {
             parse_block_quotation(&["bq. *My quote*"]),
             Some((
                 Block::BlockQuotation {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     cite: "".to_string(),
                     elements: vec![
                         Block::Paragraph {
-                            attributes: vec![],
+                            attributes: Attributes::new(),
                             elements: vec![
                                 Inline::Bold {
-                                    attributes: vec![],
+                                    attributes: Attributes::new(),
                                     elements: vec![
                                         Inline::Text("My quote".to_string()),
                                     ],
@@ -118,18 +118,18 @@ mod tests {
             parse_block_quotation(&["bq.. Block quotation", "", "in multiline mode"]),
             Some((
                 Block::BlockQuotation {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     cite: "".to_string(),
                     elements: vec![
                         Block::Paragraph {
-                            attributes: vec![],
+                            attributes: Attributes::new(),
                             elements: vec![
                                 Inline::Text("Block quotation".to_string()),
                             ],
                             starts_with_p: false,
                         },
                         Block::Paragraph {
-                            attributes: vec![],
+                            attributes: Attributes::new(),
                             elements: vec![
                                 Inline::Text("in multiline mode".to_string()),
                             ],
@@ -144,18 +144,18 @@ mod tests {
             parse_block_quotation(&["bq.. Block quotation", "", "in multiline mode", "", "h1. Heading"]),
             Some((
                 Block::BlockQuotation {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     cite: "".to_string(),
                     elements: vec![
                         Block::Paragraph {
-                            attributes: vec![],
+                            attributes: Attributes::new(),
                             elements: vec![
                                 Inline::Text("Block quotation".to_string()),
                             ],
                             starts_with_p: false,
                         },
                         Block::Paragraph {
-                            attributes: vec![],
+                            attributes: Attributes::new(),
                             elements: vec![
                                 Inline::Text("in multiline mode".to_string()),
                             ],
@@ -174,11 +174,11 @@ mod tests {
             parse_block_quotation(&["bq.:http://example.com Block quotation"]),
             Some((
                 Block::BlockQuotation {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     cite: "http://example.com".to_string(),
                     elements: vec![
                         Block::Paragraph {
-                            attributes: vec![],
+                            attributes: Attributes::new(),
                             elements: vec![
                                 Inline::Text("Block quotation".to_string()),
                             ],

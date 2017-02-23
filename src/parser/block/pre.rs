@@ -58,7 +58,7 @@ pub fn parse_pre_block(lines: &[&str]) -> Option<(Block, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::Block;
+    use parser::{Attributes, Block};
     use super::*;
 
     #[test]
@@ -67,7 +67,7 @@ mod tests {
             parse_pre_block(&["pre. Pre-formatted text."]),
             Some((
                 Block::Pre {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     lines: vec!["Pre-formatted text.".to_string()],
                 },
                 1

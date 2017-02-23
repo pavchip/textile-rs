@@ -35,7 +35,7 @@ pub fn parse_bold_text(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Inline, BoldTagType};
+    use parser::{Attributes, Inline, BoldTagType};
     use super::*;
 
     #[test]
@@ -44,7 +44,7 @@ mod tests {
             parse_bold_text("*Strong text*"),
             Some((
                 Inline::Bold {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     elements: vec![
                         Inline::Text("Strong text".to_string()),
                     ],
@@ -57,7 +57,7 @@ mod tests {
             parse_bold_text("**Bold text**"),
             Some((
                 Inline::Bold {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     elements: vec![
                         Inline::Text("Bold text".to_string()),
                     ],

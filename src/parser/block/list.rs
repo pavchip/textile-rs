@@ -1,4 +1,4 @@
-use parser::{Block, ListElement};
+use parser::{Attributes, Block, ListElement};
 use parser::attributes::parse_inline_attributes;
 use parser::inline::parse_inline_elements;
 use parser::patterns::{ORDERED_LIST_PATTERN, UNORDERED_LIST_PATTERN};
@@ -82,7 +82,7 @@ fn parse_ordered_list(lines: &[&str], list_level: usize) -> Option<(Block, usize
 
         Some((
             Block::OrderedList {
-                attributes: Vec::new(),
+                attributes: Attributes::new(),
                 elements: elements,
                 level: list_level as u8,
                 start: start,
@@ -132,7 +132,7 @@ fn parse_unordered_list(lines: &[&str], list_level: usize) -> Option<(Block, usi
 
         Some((
             Block::UnorderedList {
-                attributes: Vec::new(),
+                attributes: Attributes::new(),
                 elements: elements,
                 level: list_level as u8,
             },

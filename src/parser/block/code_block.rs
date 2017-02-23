@@ -58,7 +58,7 @@ pub fn parse_code_block(lines: &[&str]) -> Option<(Block, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::Block;
+    use parser::{Attributes, Block};
     use super::*;
 
     #[test]
@@ -67,7 +67,7 @@ mod tests {
             parse_code_block(&["bc. print('Hello World')", "print(10 * 4)"]),
             Some((
                 Block::CodeBlock {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     code: "print('Hello World')\nprint(10 * 4)".to_string()
                 },
                 2
@@ -89,7 +89,7 @@ mod tests {
             ]),
             Some((
                 Block::CodeBlock {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     code: "#include <iostream>\nusing namespace std\n\nint main() {\n    cout << \"Hello, world!\" << endl;\n    return 0;\n}".to_string(),
                 },
                 7
@@ -109,7 +109,7 @@ mod tests {
             ]),
             Some((
                 Block::CodeBlock {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     code: "#include <iostream>\nusing namespace std\n\nint main() {\n    cout << \"Hello, world!\" << endl;\n    return 0;\n}".to_string(),
                 },
                 8

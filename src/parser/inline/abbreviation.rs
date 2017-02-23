@@ -1,4 +1,4 @@
-use parser::Inline;
+use parser::{Attributes, Inline};
 use parser::patterns::ABBREVIATION_PATTERN;
 
 pub fn parse_abbreviation(text: &str) -> Option<(Inline, usize)> {
@@ -10,7 +10,7 @@ pub fn parse_abbreviation(text: &str) -> Option<(Inline, usize)> {
         if transcript.is_empty() {
             Some((
                 Inline::Span {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     elements: vec![
                         Inline::Text(abbreviation),
                     ],
@@ -33,7 +33,7 @@ pub fn parse_abbreviation(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::Inline;
+    use parser::{Attributes, Inline};
     use super::*;
 
     #[test]
@@ -56,7 +56,7 @@ mod tests {
             parse_abbreviation("ABBR"),
             Some((
                 Inline::Span {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     elements: vec![
                         Inline::Text("ABBR".to_string()),
                     ],

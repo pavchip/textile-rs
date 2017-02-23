@@ -51,7 +51,7 @@ pub fn parse_link(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Inline, ItalicTagType};
+    use parser::{Attributes, Inline, ItalicTagType};
     use super::*;
 
     #[test]
@@ -60,10 +60,10 @@ mod tests {
             parse_link("\"_Text_\":http://example.com"),
             Some((
                 Inline::Link {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     elements: vec![
                         Inline::Italic {
-                            attributes: vec![],
+                            attributes: Attributes::new(),
                             elements: vec![
                                 Inline::Text("Text".to_string()),
                             ],
@@ -84,7 +84,7 @@ mod tests {
             parse_link("\"Link(With title)\":http://example.com"),
             Some((
                 Inline::Link {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     elements: vec![
                         Inline::Text("Link".to_string()),
                     ],
@@ -102,7 +102,7 @@ mod tests {
             parse_link("\"$\":http://example.com"),
             Some((
                 Inline::Link {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     elements: vec![
                         Inline::Text("example.com".to_string()),
                     ],
@@ -116,7 +116,7 @@ mod tests {
             parse_link("\"$\":mailto:user@example.com"),
             Some((
                 Inline::Link {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     elements: vec![
                         Inline::Text("user@example.com".to_string()),
                     ],

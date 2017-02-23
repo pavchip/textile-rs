@@ -1,4 +1,4 @@
-use parser::{Attribute, Inline};
+use parser::Inline;
 use parser::attributes::parse_inline_attributes;
 use parser::patterns::{IMAGE_PATTERN, IMAGE_ALT_PATTERN};
 
@@ -13,18 +13,15 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
             _ => "",
         }.to_string();
         let href = caps.name("href").unwrap_or("").to_string();
-        let (mut attrs, string) = parse_inline_attributes(caps.name("string").unwrap());
+        let (attrs, string) = parse_inline_attributes(caps.name("string").unwrap());
         let image_alt_caps = IMAGE_ALT_PATTERN.captures(&*string).unwrap();
         let alt = image_alt_caps.at(1).unwrap_or("").to_string();
         let src = IMAGE_ALT_PATTERN.replace(&*string, "");
 
-        if !align.is_empty() {
-            attrs.push(Attribute::Align(align));
-        }
-
         Some((
             Inline::Image {
                 attributes: attrs,
+                align: align,
                 alt: alt,
                 href: href,
                 src: src,
@@ -38,7 +35,7 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attribute, Inline};
+    use parser::{Attributes, Inline};
     use super::*;
 
     #[test]
@@ -47,7 +44,8 @@ mod tests {
             parse_image("!http://example.com(Example image)!"),
             Some((
                 Inline::Image {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
+                    align: "".to_string(),
                     alt: "Example image".to_string(),
                     href: "".to_string(),
                     src: "http://example.com".to_string(),
@@ -63,7 +61,8 @@ mod tests {
             parse_image("!http://example.com!"),
             Some((
                 Inline::Image {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
+                    align: "".to_string(),
                     alt: "".to_string(),
                     href: "".to_string(),
                     src: "http://example.com".to_string(),
@@ -79,9 +78,8 @@ mod tests {
             parse_image("!>http://example.com(Example image)!"),
             Some((
                 Inline::Image {
-                    attributes: vec![
-                        Attribute::Align("right".to_string()),
-                    ],
+                    attributes: Attributes::new(),
+                    align: "right".to_string(),
                     alt: "Example image".to_string(),
                     href: "".to_string(),
                     src: "http://example.com".to_string(),
@@ -97,7 +95,8 @@ mod tests {
             parse_image("!http://example.com/image.jpg(Example image)!:http://example.com"),
             Some((
                 Inline::Image {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
+                    align: "".to_string(),
                     alt: "Example image".to_string(),
                     href: "http://example.com".to_string(),
                     src: "http://example.com/image.jpg".to_string(),

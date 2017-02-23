@@ -33,7 +33,7 @@ pub fn parse_paragraph(lines: &[&str]) -> Option<(Block, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Block, Inline};
+    use parser::{Attributes, Block, Inline};
     use super::*;
 
     #[test]
@@ -42,7 +42,7 @@ mod tests {
             parse_paragraph(&["p. Paragraph", "with text"]),
             Some((
                 Block::Paragraph {
-                    attributes: vec![],
+                    attributes: Attributes::new(),
                     elements: vec![
                         Inline::Text("Paragraph".to_string()),
                         Inline::Break,
