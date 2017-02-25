@@ -1,4 +1,4 @@
-use parser::{Inline, ItalicTagType};
+use parser::Inline;
 use parser::attributes::parse_inline_attributes;
 use parser::inline::parse_inline_elements;
 use parser::patterns::ITALIC_TEXT_PATTERN;
@@ -12,16 +12,11 @@ pub fn parse_italic_text(text: &str) -> Option<(Inline, usize)> {
         let count2 = caps.name("count2").unwrap().len();
 
         if count1 == count2 && count1 == 1 || count1 == 2 {
-            let tag_type = if count1 == 1 {
-                ItalicTagType::Emphasis
-            } else {
-                ItalicTagType::Italic
-            };
             Some((
                 Inline::Italic {
                     attributes: attrs,
                     elements: parse_inline_elements(&[&*text]),
-                    tag_type: tag_type,
+                    tag_type: if count1 == 1 { "em" } else { "i" }.to_string(),
                 },
                 group_0.len()
             ))
@@ -35,7 +30,7 @@ pub fn parse_italic_text(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Inline, ItalicTagType};
+    use parser::{Attributes, Inline};
     use super::*;
 
     #[test]
@@ -48,7 +43,7 @@ mod tests {
                     elements: vec![
                         Inline::Text("Emphasis text".to_string())
                     ],
-                    tag_type: ItalicTagType::Emphasis,
+                    tag_type: "em".to_string(),
                 },
                 15
             ))
@@ -61,7 +56,7 @@ mod tests {
                     elements: vec![
                         Inline::Text("Italic text".to_string())
                     ],
-                    tag_type: ItalicTagType::Italic,
+                    tag_type: "i".to_string(),
                 },
                 15
             ))

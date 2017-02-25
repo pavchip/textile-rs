@@ -35,7 +35,7 @@ pub fn parse_heading(lines: &[&str]) -> Option<(Block, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Block, Inline, BoldTagType, ItalicTagType};
+    use parser::{Attributes, Block, Inline};
     use super::*;
 
     #[test]
@@ -52,7 +52,7 @@ mod tests {
                             elements: vec![
                                 Inline::Text("Bold text".to_string()),
                             ],
-                            tag_type: BoldTagType::Strong,
+                            tag_type: "strong".to_string(),
                         },
                         Inline::Text(" ".to_string()),
                         Inline::Italic {
@@ -60,7 +60,7 @@ mod tests {
                             elements: vec![
                                 Inline::Text("Italic text".to_string()),
                             ],
-                            tag_type: ItalicTagType::Emphasis,
+                            tag_type: "em".to_string(),
                         },
                     ]
                 },

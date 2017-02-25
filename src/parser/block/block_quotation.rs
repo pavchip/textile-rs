@@ -80,7 +80,7 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Block, Inline, BoldTagType};
+    use parser::{Attributes, Block, Inline};
     use super::*;
 
     #[test]
@@ -100,7 +100,7 @@ mod tests {
                                     elements: vec![
                                         Inline::Text("My quote".to_string()),
                                     ],
-                                    tag_type: BoldTagType::Strong,
+                                    tag_type: "strong".to_string(),
                                 },
                             ],
                             starts_with_p: false,

@@ -183,12 +183,8 @@ fn render_inline_elements(elements: &[Inline], options: &RenderOptions) -> Strin
                         abbr)
             }
             Inline::Bold { ref attributes, ref elements, ref tag_type } => {
-                let tag = match *tag_type {
-                    BoldTagType::Strong => "strong",
-                    BoldTagType::Bold => "b",
-                };
                 format!("<{0}{1}>{2}</{0}>",
-                        tag,
+                        tag_type,
                         render_attributes(attributes),
                         render_inline_elements(elements, options))
             }
@@ -221,12 +217,8 @@ fn render_inline_elements(elements: &[Inline], options: &RenderOptions) -> Strin
                 }
             }
             Inline::Italic { ref attributes, ref elements, ref tag_type } => {
-                let tag = match *tag_type {
-                    ItalicTagType::Emphasis => "em",
-                    ItalicTagType::Italic => "i",
-                };
                 format!("<{0}{1}>{2}</{0}>",
-                        tag,
+                        tag_type,
                         render_attributes(attributes),
                         render_inline_elements(elements, options))
             }

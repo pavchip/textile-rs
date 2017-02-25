@@ -51,7 +51,7 @@ pub fn parse_link(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Inline, ItalicTagType};
+    use parser::{Attributes, Inline};
     use super::*;
 
     #[test]
@@ -67,7 +67,7 @@ mod tests {
                             elements: vec![
                                 Inline::Text("Text".to_string()),
                             ],
-                            tag_type: ItalicTagType::Emphasis,
+                            tag_type: "em".to_string(),
                         }
                     ],
                     href: "http://example.com".to_string(),

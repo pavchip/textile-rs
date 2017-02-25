@@ -1,4 +1,4 @@
-use parser::{Inline, BoldTagType};
+use parser::Inline;
 use parser::attributes::parse_inline_attributes;
 use parser::inline::parse_inline_elements;
 use parser::patterns::BOLD_TEXT_PATTERN;
@@ -12,16 +12,11 @@ pub fn parse_bold_text(text: &str) -> Option<(Inline, usize)> {
         let count2 = caps.name("count2").unwrap().len();
 
         if count1 == count2 && count1 == 1 || count1 == 2 {
-            let tag_type = if count1 == 1 {
-                BoldTagType::Strong
-            } else {
-                BoldTagType::Bold
-            };
             Some((
                 Inline::Bold {
                     attributes: attrs,
                     elements: parse_inline_elements(&[&*text]),
-                    tag_type: tag_type,
+                    tag_type: if count1 == 1 { "strong" } else { "b" }.to_string(),
                 },
                 group_0.len()
             ))
@@ -35,7 +30,7 @@ pub fn parse_bold_text(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Inline, BoldTagType};
+    use parser::{Attributes, Inline};
     use super::*;
 
     #[test]
@@ -48,7 +43,7 @@ mod tests {
                     elements: vec![
                         Inline::Text("Strong text".to_string()),
                     ],
-                    tag_type: BoldTagType::Strong,
+                    tag_type: "strong".to_string(),
                 },
                 13
             ))
@@ -61,7 +56,7 @@ mod tests {
                     elements: vec![
                         Inline::Text("Bold text".to_string()),
                     ],
-                    tag_type: BoldTagType::Bold,
+                    tag_type: "b".to_string(),
                 },
                 13
             ))

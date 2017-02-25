@@ -77,7 +77,7 @@ pub enum Inline {
     Bold {
         attributes: Attributes,
         elements: InlineElements,
-        tag_type: BoldTagType,
+        tag_type: String,
     },
     /// Line break. Converts to `<br>` tag in HTML.
     Break,
@@ -100,7 +100,7 @@ pub enum Inline {
     Italic {
         attributes: Attributes,
         elements: InlineElements,
-        tag_type: ItalicTagType,
+        tag_type: String,
     },
     /// Link, e.g. `"Link":http://example.com`.
     Link {
@@ -138,24 +138,6 @@ pub enum Inline {
     },
 }
 
-/// Tag type for bold text.
-#[derive(Debug, PartialEq)]
-pub enum BoldTagType {
-    /// Converts into HTML `<b>` tag.
-    Bold,
-    /// Converts into HTML `<strong>` tag.
-    Strong,
-}
-
-/// Tag type for italic text.
-#[derive(Debug, PartialEq)]
-pub enum ItalicTagType {
-    /// Converts into HTML `<em>` tag.
-    Emphasis,
-    /// Converts into HTML `<i>` tag.
-    Italic,
-}
-
 #[derive(Debug, PartialEq)]
 pub enum ListElement {
     ListItem {
@@ -179,7 +161,7 @@ pub enum ListElement {
 ///         elements: vec![
 ///             Inline::Italic {
 ///                 attributes: Attributes::new(),
-///                 tag_type: ItalicTagType::Emphasis,
+///                 tag_type: "em".to_string(),
 ///                 elements: vec![
 ///                     Inline::Text("String with text".to_string())
 ///                 ]
