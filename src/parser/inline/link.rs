@@ -7,9 +7,13 @@ use url::{Origin, Url};
 pub fn parse_link(text: &str) -> Option<(Inline, usize)> {
     if LINK_PATTERN.is_match(text) {
         let caps = LINK_PATTERN.captures(text).unwrap();
-        let (attrs, mut string) = parse_inline_attributes(caps.name("string").unwrap());
+        let (mut attrs, mut string) = parse_inline_attributes(caps.name("string").unwrap());
         let href = caps.name("href").unwrap().to_string();
-        let title = LINK_TITLE_PATTERN.captures(&*string).unwrap().at(1).unwrap_or("").to_string();
+
+        if let Some(title) = LINK_TITLE_PATTERN.captures(&*string).unwrap().at(1) {
+            attrs.insert("title".to_string(), title.to_string());
+        }
+        
         string = LINK_TITLE_PATTERN.replace(&*string, "");
         let elements = if string != "$" {
             parse_inline_elements(&[&*string])
@@ -34,13 +38,12 @@ pub fn parse_link(text: &str) -> Option<(Inline, usize)> {
             };
             vec![Inline::Text(desc)]
         };
+        attrs.insert("href".to_string(), href);
 
         Some((
             Inline::Link {
                 attributes: attrs,
                 elements: elements,
-                href: href,
-                title: title,
             },
             caps.at(0).unwrap().len()
         ))
@@ -60,7 +63,9 @@ mod tests {
             parse_link("\"_Text_\":http://example.com"),
             Some((
                 Inline::Link {
-                    attributes: Attributes::new(),
+                    attributes: hashmap!{
+                        "href".to_string() => "http://example.com".to_string(),
+                    },
                     elements: vec![
                         Inline::Italic {
                             attributes: Attributes::new(),
@@ -70,8 +75,6 @@ mod tests {
                             tag_type: "em".to_string(),
                         }
                     ],
-                    href: "http://example.com".to_string(),
-                    title: "".to_string(),
                 },
                 27
             ))
@@ -84,12 +87,13 @@ mod tests {
             parse_link("\"Link(With title)\":http://example.com"),
             Some((
                 Inline::Link {
-                    attributes: Attributes::new(),
+                    attributes: hashmap!{
+                        "href".to_string() => "http://example.com".to_string(),
+                        "title".to_string() => "With title".to_string(),
+                    },
                     elements: vec![
                         Inline::Text("Link".to_string()),
                     ],
-                    href: "http://example.com".to_string(),
-                    title: "With title".to_string(),
                 },
                 37
             ))
@@ -102,12 +106,12 @@ mod tests {
             parse_link("\"$\":http://example.com"),
             Some((
                 Inline::Link {
-                    attributes: Attributes::new(),
+                    attributes: hashmap!{
+                        "href".to_string() => "http://example.com".to_string(),
+                    },
                     elements: vec![
                         Inline::Text("example.com".to_string()),
                     ],
-                    href: "http://example.com".to_string(),
-                    title: "".to_string(),
                 },
                 22
             ))
@@ -116,12 +120,12 @@ mod tests {
             parse_link("\"$\":mailto:user@example.com"),
             Some((
                 Inline::Link {
-                    attributes: Attributes::new(),
+                    attributes: hashmap!{
+                        "href".to_string() => "mailto:user@example.com".to_string(),
+                    },
                     elements: vec![
                         Inline::Text("user@example.com".to_string()),
                     ],
-                    href: "mailto:user@example.com".to_string(),
-                    title: "".to_string(),
                 },
                 27
             ))

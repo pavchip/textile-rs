@@ -38,19 +38,18 @@ pub fn parse_multilevel_list(lines: &[&str], list_level: usize) -> Option<(Block
 
 fn parse_ordered_list(lines: &[&str], list_level: usize) -> Option<(Block, usize)> {
     if ORDERED_LIST_PATTERN.is_match(lines[0]) {
+        let mut attrs = Attributes::new();
         let mut line_idx = 0;
         let mut elements = Vec::new();
-        let mut start = None;
 
         while line_idx < lines.len() {
             let (caps, list_type) = get_list_data(lines[line_idx]);
             let level = caps.name("level").unwrap().len() - 1;
 
             if line_idx == 0 {
-                start = match caps.name("start") {
-                    Some(val) => Some(val.parse::<u8>().unwrap()),
-                    None => None,
-                };
+                if let Some(start) = caps.name("start") {
+                    attrs.insert("start".to_string(), start.to_string());
+                }
             }
 
             if level == list_level && list_type == 'o' {
@@ -85,7 +84,6 @@ fn parse_ordered_list(lines: &[&str], list_level: usize) -> Option<(Block, usize
                 attributes: Attributes::new(),
                 elements: elements,
                 level: list_level as u8,
-                start: start,
             },
             line_idx
         ))

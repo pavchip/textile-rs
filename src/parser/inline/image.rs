@@ -13,18 +13,24 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
             _ => "",
         }.to_string();
         let href = caps.name("href").unwrap_or("").to_string();
-        let (attrs, string) = parse_inline_attributes(caps.name("string").unwrap());
+        let (mut attrs, string) = parse_inline_attributes(caps.name("string").unwrap());
         let image_alt_caps = IMAGE_ALT_PATTERN.captures(&*string).unwrap();
-        let alt = image_alt_caps.at(1).unwrap_or("").to_string();
         let src = IMAGE_ALT_PATTERN.replace(&*string, "");
+        attrs.insert("src".to_string(), src);
+
+        if !align.is_empty() {
+            attrs.insert("align".to_string(), align);
+        }
+
+        if let Some(alt) = image_alt_caps.at(1) {
+            attrs.insert("alt".to_string(), alt.to_string());
+            attrs.insert("title".to_string(), alt.to_string());
+        }
 
         Some((
             Inline::Image {
                 attributes: attrs,
-                align: align,
-                alt: alt,
                 href: href,
-                src: src,
             },
             group_0_len
         ))
@@ -35,7 +41,7 @@ pub fn parse_image(text: &str) -> Option<(Inline, usize)> {
 
 #[cfg(test)]
 mod tests {
-    use parser::{Attributes, Inline};
+    use parser::Inline;
     use super::*;
 
     #[test]
@@ -44,11 +50,12 @@ mod tests {
             parse_image("!http://example.com(Example image)!"),
             Some((
                 Inline::Image {
-                    attributes: Attributes::new(),
-                    align: "".to_string(),
-                    alt: "Example image".to_string(),
+                    attributes: hashmap!{
+                        "alt".to_string() => "Example image".to_string(),
+                        "src".to_string() => "http://example.com".to_string(),
+                        "title".to_string() => "Example image".to_string(),
+                    },
                     href: "".to_string(),
-                    src: "http://example.com".to_string(),
                 },
                 35
             ))
@@ -61,11 +68,10 @@ mod tests {
             parse_image("!http://example.com!"),
             Some((
                 Inline::Image {
-                    attributes: Attributes::new(),
-                    align: "".to_string(),
-                    alt: "".to_string(),
+                    attributes: hashmap!{
+                        "src".to_string() => "http://example.com".to_string(),
+                    },
                     href: "".to_string(),
-                    src: "http://example.com".to_string(),
                 },
                 20
             ))
@@ -78,11 +84,13 @@ mod tests {
             parse_image("!>http://example.com(Example image)!"),
             Some((
                 Inline::Image {
-                    attributes: Attributes::new(),
-                    align: "right".to_string(),
-                    alt: "Example image".to_string(),
+                    attributes: hashmap!{
+                        "align".to_string() => "right".to_string(),
+                        "alt".to_string() => "Example image".to_string(),
+                        "title".to_string() => "Example image".to_string(),
+                        "src".to_string() => "http://example.com".to_string(),
+                    },
                     href: "".to_string(),
-                    src: "http://example.com".to_string(),
                 },
                 36
             ))
@@ -95,11 +103,12 @@ mod tests {
             parse_image("!http://example.com/image.jpg(Example image)!:http://example.com"),
             Some((
                 Inline::Image {
-                    attributes: Attributes::new(),
-                    align: "".to_string(),
-                    alt: "Example image".to_string(),
+                    attributes: hashmap!{
+                        "alt".to_string() => "Example image".to_string(),
+                        "title".to_string() => "Example image".to_string(),
+                        "src".to_string() => "http://example.com/image.jpg".to_string(),
+                    },
                     href: "http://example.com".to_string(),
-                    src: "http://example.com/image.jpg".to_string(),
                 },
                 64
             ))

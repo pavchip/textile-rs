@@ -10,11 +10,14 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
 
     if BLOCK_QUOTATION_PATTERN.is_match(lines[0]) {
         let caps = BLOCK_QUOTATION_PATTERN.captures(lines[0]).unwrap();
-        let cite = caps.name("cite").unwrap_or("").to_string();
-        let attrs = parse_block_attributes(caps.name("attributes").unwrap());
+        let mut attrs = parse_block_attributes(caps.name("attributes").unwrap());
         let mut blocks = Vec::new();
         let mut strings = Vec::new();
         strings.push(&lines[0][caps.at(0).unwrap().len()..]);
+
+        if let Some(cite) = caps.name("cite") {
+            attrs.insert("cite".to_string(), cite.to_string());
+        }
 
         if caps.name("mode").unwrap().len() == 1 {
             // Breaks parsing if line is empty.
@@ -26,7 +29,11 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
                 strings.push(line);
             }
             blocks.push(Block::Paragraph {
-                attributes: attrs.clone(),
+                attributes: {
+                    let mut attrs = attrs.clone();
+                    attrs.remove(&"cite".to_string());
+                    attrs
+                },
                 elements: parse_inline_elements(&strings),
                 starts_with_p: false,
             });
@@ -53,11 +60,16 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
                 strings.push(line);
             }
             let mut line_pos = 0;
+
             while line_pos < strings.len() {
                 if let Some((mut paragraph, lines_count)) =
                        parse_paragraph(&strings[line_pos..strings.len()]) {
                     if let Block::Paragraph { ref mut attributes, .. } = paragraph {
-                        *attributes = attrs.clone();
+                        *attributes = {
+                            let mut attrs = attrs.clone();
+                            attrs.remove(&"cite".to_string());
+                            attrs
+                        };
                     }
                     line_pos += lines_count;
                     blocks.push(paragraph);
@@ -68,7 +80,6 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
         Some((
             Block::BlockQuotation {
                 attributes: attrs.clone(),
-                cite: cite,
                 elements: blocks,
             },
             cur_line
@@ -90,7 +101,6 @@ mod tests {
             Some((
                 Block::BlockQuotation {
                     attributes: Attributes::new(),
-                    cite: "".to_string(),
                     elements: vec![
                         Block::Paragraph {
                             attributes: Attributes::new(),
@@ -119,7 +129,6 @@ mod tests {
             Some((
                 Block::BlockQuotation {
                     attributes: Attributes::new(),
-                    cite: "".to_string(),
                     elements: vec![
                         Block::Paragraph {
                             attributes: Attributes::new(),
@@ -145,7 +154,6 @@ mod tests {
             Some((
                 Block::BlockQuotation {
                     attributes: Attributes::new(),
-                    cite: "".to_string(),
                     elements: vec![
                         Block::Paragraph {
                             attributes: Attributes::new(),
@@ -174,8 +182,9 @@ mod tests {
             parse_block_quotation(&["bq.:http://example.com Block quotation"]),
             Some((
                 Block::BlockQuotation {
-                    attributes: Attributes::new(),
-                    cite: "http://example.com".to_string(),
+                    attributes: hashmap!{
+                        "cite".to_string() => "http://example.com".to_string(),
+                    },
                     elements: vec![
                         Block::Paragraph {
                             attributes: Attributes::new(),

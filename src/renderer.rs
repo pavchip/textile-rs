@@ -70,13 +70,7 @@ fn render_blocks(elements: &[Block], options: &RenderOptions) -> String {
 
 fn render_block(element: &Block, options: &RenderOptions) -> String {
     match *element {
-        Block::BlockQuotation { ref attributes, ref cite, ref elements } => {
-            let mut attrs = attributes.clone();
-
-            if !cite.is_empty() {
-                attrs.insert("cite".to_string(), cite.to_string());
-            }
-
+        Block::BlockQuotation { ref attributes, ref elements } => {
             if !options.compress {
                 let mut res = String::new();
                 let spaces: String = iter::repeat(" ").take(options.indent as usize).collect();
@@ -85,11 +79,11 @@ fn render_block(element: &Block, options: &RenderOptions) -> String {
                     res.push_str(&*format!("\n{}{}", spaces, render_block(element, options)));
                 }
                 format!("<blockquote{}>{}\n</blockquote>",
-                        render_attributes(&attrs),
+                        render_attributes(attributes),
                         res)
             } else {
                 format!("<blockquote{}>{}</blockquote>",
-                        render_attributes(&attrs),
+                        render_attributes(attributes),
                         render_blocks(elements, options))
             }
         }
@@ -105,15 +99,10 @@ fn render_block(element: &Block, options: &RenderOptions) -> String {
                     render_inline_elements(elements, options))
         }
         Block::NoTextileBlock(ref strings) => strings.join("\n"),
-        Block::OrderedList { ref attributes, ref elements, level, start } => {
+        Block::OrderedList { ref attributes, ref elements, level } => {
             let mut res = String::new();
-            let mut attrs = attributes.clone();
             let list_item_indent: String = iter::repeat(" ").take((options.indent * (level + 1)) as usize).collect();
             let list_indent: String = iter::repeat(" ").take((options.indent * level) as usize).collect();
-
-            if let Some(val) = start {
-                attrs.insert("start".to_string(), val.to_string());
-            }
 
             for element in elements {
                 let html = match *element {
@@ -131,7 +120,7 @@ fn render_block(element: &Block, options: &RenderOptions) -> String {
             }
             format!("{0}<ol{1}>{2}\n{0}</ol>",
                     list_indent,
-                    render_attributes(&attrs),
+                    render_attributes(attributes),
                     res)
         },
         Block::Paragraph { ref attributes, ref elements, .. } => {
@@ -195,20 +184,8 @@ fn render_inline_elements(elements: &[Inline], options: &RenderOptions) -> Strin
                         render_inline_elements(elements, options))
             }
             Inline::Code(ref text) => format!("<code>{}</code>", text),
-            Inline::Image { ref attributes, ref align, ref alt, ref href, ref src } => {
-                let mut attrs = attributes.clone();
-                attrs.insert("src".to_string(), src.to_string());
-
-                if !align.is_empty() {
-                    attrs.insert("align".to_string(), align.to_string());
-                }
-
-                if !alt.is_empty() {
-                    attrs.insert("alt".to_string(), alt.to_string());
-                    attrs.insert("title".to_string(), alt.to_string());
-                }
-
-                let img = format!("<img{}>", render_attributes(&attrs));
+            Inline::Image { ref attributes, ref href } => {
+                let img = format!("<img{}>", render_attributes(attributes));
 
                 if !href.is_empty() {
                     format!("<a href=\"{}\">{}</a>", href, img)
@@ -222,17 +199,9 @@ fn render_inline_elements(elements: &[Inline], options: &RenderOptions) -> Strin
                         render_attributes(attributes),
                         render_inline_elements(elements, options))
             }
-            Inline::Link { ref attributes, ref elements, ref href, ref title } => {
-                let mut attrs = attributes.clone();
-                attrs.insert("href".to_string(), href.to_string());
-
-                if !title.is_empty() {
-                    attrs.insert("title".to_string(), title.to_string());
-                }
-
-                format!("<a href=\"{}\"{}>{}</a>",
-                        href,
-                        render_attributes(&attrs),
+            Inline::Link { ref attributes, ref elements } => {
+                format!("<a{}>{}</a>",
+                        render_attributes(attributes),
                         render_inline_elements(elements, options))
             }
             Inline::Span { ref attributes, ref elements } => {

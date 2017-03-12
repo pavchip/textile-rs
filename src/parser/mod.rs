@@ -22,7 +22,6 @@ pub enum Block {
     /// Block quotation, e.g. `bq. Some quote`.
     BlockQuotation {
         attributes: Attributes,
-        cite: String,
         elements: BlockElements,
     },
     /// Code block, e.g. `bc. print("Hello World")`.
@@ -44,7 +43,6 @@ pub enum Block {
         attributes: Attributes,
         elements: Vec<ListElement>,
         level: u8,
-        start: Option<u8>,
     },
     /// Paragraph, e.g. `p. Some text` or `Some text`.
     Paragraph {
@@ -91,10 +89,7 @@ pub enum Inline {
     /// Image, e.g. `!http://example.com/image.jpg(Image)!`.
     Image {
         attributes: Attributes,
-        align: String,
-        alt: String,
         href: String,
-        src: String,
     },
     /// Italic text, e.g. `_Text_` or `__Text__`.
     Italic {
@@ -106,8 +101,6 @@ pub enum Inline {
     Link {
         attributes: Attributes,
         elements: InlineElements,
-        href: String,
-        title: String,
     },
     /// Span element, e.g. `%Span text%`.
     Span {
