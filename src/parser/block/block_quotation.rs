@@ -10,13 +10,14 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
 
     if BLOCK_QUOTATION_PATTERN.is_match(lines[0]) {
         let caps = BLOCK_QUOTATION_PATTERN.captures(lines[0]).unwrap();
-        let mut attrs = parse_block_attributes(caps.name("attributes").unwrap());
+        let mut bq_attrs = parse_block_attributes(caps.name("attributes").unwrap());
+        let p_attrs = bq_attrs.clone();
         let mut blocks = Vec::new();
         let mut strings = Vec::new();
         strings.push(&lines[0][caps.at(0).unwrap().len()..]);
 
         if let Some(cite) = caps.name("cite") {
-            attrs.insert("cite".to_string(), cite.to_string());
+            bq_attrs.insert("cite".to_string(), cite.to_string());
         }
 
         if caps.name("mode").unwrap().len() == 1 {
@@ -29,11 +30,7 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
                 strings.push(line);
             }
             blocks.push(Block::Paragraph {
-                attributes: {
-                    let mut attrs = attrs.clone();
-                    attrs.remove(&"cite".to_string());
-                    attrs
-                },
+                attributes: p_attrs.clone(),
                 elements: parse_inline_elements(&strings),
                 starts_with_p: false,
             });
@@ -65,11 +62,7 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
                 if let Some((mut paragraph, lines_count)) =
                        parse_paragraph(&strings[line_pos..strings.len()]) {
                     if let Block::Paragraph { ref mut attributes, .. } = paragraph {
-                        *attributes = {
-                            let mut attrs = attrs.clone();
-                            attrs.remove(&"cite".to_string());
-                            attrs
-                        };
+                        *attributes = p_attrs.clone();
                     }
                     line_pos += lines_count;
                     blocks.push(paragraph);
@@ -79,7 +72,7 @@ pub fn parse_block_quotation(lines: &[&str]) -> Option<(Block, usize)> {
 
         Some((
             Block::BlockQuotation {
-                attributes: attrs.clone(),
+                attributes: bq_attrs,
                 elements: blocks,
             },
             cur_line
